@@ -275,17 +275,17 @@ public class Board implements IBoard {
 
 	@Override
 	public IPiece getPiece(Point p) {
-		return chessBoard[((int) p.getX()) - 1][((int) p.getY()) - 1];
+		return chessBoard[((int) p.getX())][((int) p.getY())];
 	}
 
 	@Override
 	public void setPieceNull(Point p) {
-		chessBoard[((int) p.getX()) - 1][((int) p.getY()) - 1] = null;
+		chessBoard[((int) p.getX())][((int) p.getY())] = null;
 	}
 
 	@Override
 	public void setPiece(Point p, IPiece piece) {
-		chessBoard[((int) p.getX()) - 1][((int) p.getY()) - 1] = piece;
+		chessBoard[((int) p.getX())][((int) p.getY())] = piece;
 	}
 
 	@Override

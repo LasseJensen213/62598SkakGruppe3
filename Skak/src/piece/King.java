@@ -8,16 +8,15 @@ import java.awt.Point;
 
 public class King extends Piece {
 
-	private boolean check;		//King checked (I skak)
+	private boolean check; // King checked (I skak)
 	private static int value = Values.KING;
 	private boolean unmoved = true;
 
 	ArrayList<Point> legalMoves;
 
-
 	public King(Color color, Point coordinates) {
 		super(Type.King, color, value, coordinates);
-		legalMoves = new ArrayList<>();	
+		legalMoves = new ArrayList<>();
 	}
 
 	public boolean isCheck() {
@@ -30,9 +29,9 @@ public class King extends Piece {
 
 	@Override
 	public ArrayList<Point> getLegalMoves() {
-		if(unmoved) {
-			legalMoves.add(new Point(2, 0));					//Short castle	
-			legalMoves.add(new Point(-2, 0));					//Long castle
+		if (unmoved) {
+			legalMoves.add(new Point(2, 0)); // Short castle
+			legalMoves.add(new Point(-2, 0)); // Long castle
 		}
 
 		legalMoves.add(new Point(+1, 0));
@@ -54,11 +53,5 @@ public class King extends Piece {
 	public void setUnmoved(boolean unmoved) {
 		this.unmoved = unmoved;
 	}
-
-	
-
-
-
-
 
 }

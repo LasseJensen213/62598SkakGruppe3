@@ -226,12 +226,12 @@ public class MoveGenerator {
 			}
 
 			// Add extra points if it is or is becoming a center pawn.
-			if (2 < newCoords.getY() && newCoords.getY() < 7) {
+			if (1 < newCoords.getY() && newCoords.getY() < 6) {
 				newMove.addAdditionalPoints(Values.CENTERPAWN);
 			}
 
 			// Promotion
-			if (newMove.getEndCoor().getY() == 8) {
+			if (newMove.getEndCoor().getY() == 7) {
 				IPiece queen = new Queen(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
 				IPiece bishop = new Bishop(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
 				IPiece knight = new Knight(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
@@ -277,7 +277,7 @@ public class MoveGenerator {
 					// If the piece is white
 					if (piece.getColor().equals(Color.WHITE)) {
 						// If it's in the correct row.
-						if (piece.getCoordinates().getX() == 5) {
+						if (piece.getCoordinates().getX() == 4) {
 							// Has a pawn recently moved over this field?
 
 							if (boardState.getEnPassant().equals(newCoords)) {
@@ -289,7 +289,7 @@ public class MoveGenerator {
 					// Piece is black.
 					else {
 						// If it's in the correct row.
-						if (piece.getCoordinates().getX() == 4) {
+						if (piece.getCoordinates().getX() == 3) {
 							// Has a pawn recently moved over this field?
 							if (boardState.getEnPassant().equals(newCoords)) {
 								newMove.setSpecial(true);
