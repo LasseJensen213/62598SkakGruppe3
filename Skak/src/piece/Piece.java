@@ -7,8 +7,6 @@ import interfaces.IPiece;
 
 public abstract class Piece implements IPiece {
 
-	
-
 	private Type type;
 	protected Color color;
 	protected boolean moved;
@@ -23,20 +21,22 @@ public abstract class Piece implements IPiece {
 		this.coordinates = coordinates;
 		moved = false;
 	}
-	
+
 	@Override
 	public Type getType() {
 		return type;
 	}
+
 	@Override
 	public Color getColor() {
 		return color;
 	}
-	
+
 	@Override
 	public int getValue() {
 		return value;
 	}
+
 	@Override
 	abstract public ArrayList<Point> getLegalMoves();
 

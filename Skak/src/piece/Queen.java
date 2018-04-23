@@ -7,64 +7,30 @@ import data.Values;
 import java.awt.Point;
 
 public class Queen extends Piece {
-	
+
 	private static int value = Values.QUEEN;
 	ArrayList<Point> legalMoves;
-	
-	
+
 	public Queen(Color color, Point coordinates) {
 		super(Type.Queen, color, value, coordinates);
 		legalMoves = new ArrayList<>();
 
 	}
-	
+
 	@Override
 	public ArrayList<Point> getLegalMoves() {
-		
-		//Taarn bevægelser
-		//op
 		for (int i = 1; i < 8; i++) {
-			legalMoves.add(new Point (+i, 0));
+			legalMoves.add(new Point(i, 0));	//Right
+			legalMoves.add(new Point(-i, 0));	//Left
+			legalMoves.add(new Point(0, i));	//Up
+			legalMoves.add(new Point(0, -i));	//Down
+			legalMoves.add(new Point(i, i));	//Up - Right
+			legalMoves.add(new Point(-i, i));	//Up - Left
+			legalMoves.add(new Point(-i, -i));	//Down - Left
+			legalMoves.add(new Point(i, -i));	//Down - Right
 		}
-		
-		//ned
-		for (int i = 1; i > 8; i++) {
-			legalMoves.add(new Point(-i, 0));
-		}
-		
-		//højre
-		for (int i = 1; i < 8; i++) {
-			legalMoves.add(new Point(0,+i));
-		}
-		
-		//venstre
-		for (int i = -1; i > -8; i--) {
-			legalMoves.add(new Point(0,-i));
-		}
-		
-		// Loeber bevægelser
-		//diagonalt op positiv retning
-		for (int i = 1; i < 8; i++) {
-			legalMoves.add(new Point(+i,+i));
-		}
-		
-		//diagonalt ned positiv retning
-		for (int i = 1; i < 8; i++) {
-			legalMoves.add(new Point(+i,-i));
-		}
-		
-		//diagonalt ned negative retning
-		for (int i = 1; i > 8; i++) {
-			legalMoves.add(new Point(-i,-i));
-		}
-		
-		//diagonalt op negative retning
-		for (int i = 1; i > 8; i++) {
-			legalMoves.add(new Point(-i,+i));
-		}
-		
-		return legalMoves;
-    }
 
+		return legalMoves;
+	}
 
 }
