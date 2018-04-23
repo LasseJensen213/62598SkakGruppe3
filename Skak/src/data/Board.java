@@ -35,7 +35,7 @@ public class Board implements IBoard {
 		this.blackShortCastle = oldBoard.isBlackShortCastle();
 		
 				
-		this.chessBoard = oldBoard.chessBoard;
+		this.chessBoard = oldBoard.chessBoard.clone();
 		this.additionalPoints += newMove.getAdditionalPoints();
 		if (oldBoard.getTurn().equals(Color.WHITE)) {
 			this.turn = Color.BLACK;

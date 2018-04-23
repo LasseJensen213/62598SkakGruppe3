@@ -182,7 +182,7 @@ public class FEN {
                 int column = (int)(enPassant.charAt(0)-'a');
                 int row = (int)(enPassant.charAt(1)-'0');
                 result += "En passant square(Column,Row) :(" + column+","+row+") or "+enPassant;
-                board.setEnPassant(new Point(column , row));
+                board.setEnPassant(new Point(column+1 , row+1));
             }
 
         }
@@ -192,7 +192,7 @@ public class FEN {
         ///////  So far we haven't implemented the clocks
         ///////
         ////////////////////////////////////////////////////////////
-        System.out.println(result);
+        System.err.println(result);
         return board;
     }
 
@@ -333,7 +333,7 @@ public class FEN {
         finalResult += " " + playerturn + " "+castling+" "+enPassant+" "+halfmoveclock+" "+fullmovenumber;
 
 
-        System.out.println(finalResult);
+        System.err.println(finalResult);
         return finalResult;
     }
 

@@ -64,7 +64,7 @@ public class Move {
 		this.special = special;
 	}
 	public String toString(){
-		return "" + (char)(startCoor.getX()-'a'+1) + startCoor.getY() + (char)(endCoor.getX()-'a'+1) + endCoor.getY();
+		return "" + (char)((startCoor.getX()-1)+'a') + startCoor.getY() + (char)((endCoor.getX()-1)+'a') + endCoor.getY();
 	}
 	
 	
