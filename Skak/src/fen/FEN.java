@@ -35,7 +35,7 @@ public class FEN {
         ////////////////////////////////////////////////////////////
         for(int y = 7 ; y>=0 ; y-- )
         {
-            String row = piecePlacements[y];
+            String row = piecePlacements[7-y];
             String rowResult = "";
             int x = 0;
             for(int rowStr = 0 ;rowStr <row.length() ; rowStr++)
