@@ -38,8 +38,8 @@ public class GameController {
 
     public void makeMove(String move){//Converts string (eg d2d4) move to normal move
         //TODO: Check if move is legal
-        int fromX = move.charAt(0)-'a'+1;
-        int toX = move.charAt(2)-'a'+1;
+        int fromX = move.charAt(0)-'a';
+        int toX = move.charAt(2)-'a';
         makeMove(new Move(board.getPiece(new Point(fromX, (int)move.charAt(1))),new Point(fromX, (int)move.charAt(1)),new Point(toX, (int)move.charAt(3))));
     }
 
