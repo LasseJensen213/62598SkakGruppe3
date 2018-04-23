@@ -54,7 +54,7 @@ public class FEN {
                 {
                     rowResult += p;
 
-                    Point point = new Point(x+1,y+1);
+                    Point point = new Point(x,y);
                     switch(p)
                     {
                         case 'p':
@@ -182,7 +182,7 @@ public class FEN {
                 int column = (int)(enPassant.charAt(0)-'a');
                 int row = (int)(enPassant.charAt(1)-'0');
                 result += "En passant square(Column,Row) :(" + column+","+row+") or "+enPassant;
-                board.setEnPassant(new Point(column+1 , row+1));
+                board.setEnPassant(new Point(column , row));
             }
 
         }
@@ -216,7 +216,7 @@ public class FEN {
             int emptyFields = 0;
             for(int x = 0 ; x<8 ; x++)
             {
-                IPiece piece = board.getPiece(new Point(x+1,y+1));
+                IPiece piece = board.getPiece(new Point(x,y));
                 if(piece == null)
                 {
                     emptyFields++;
