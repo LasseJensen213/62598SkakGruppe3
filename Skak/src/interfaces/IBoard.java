@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import interfaces.IPiece.Color;
+import piece.Move;
 
 
 public interface IBoard {
@@ -11,6 +12,8 @@ public interface IBoard {
 	
 	
 	ArrayList<IPiece> getPieces();
+	ArrayList<IBoard> getChildBoards();
+	Move getMove();
 	boolean outOfBounds(Point p);
 	boolean allyPiecePresent(Point p, Color color);
 	boolean enemyPiecePresent(Point p, Color color);
@@ -37,6 +40,7 @@ public interface IBoard {
 	int getAdditionalPoints();
 	void addChildBoard(IBoard newBoard);
 	boolean isFieldthreatened(Point field);
+
 	
 	
 	

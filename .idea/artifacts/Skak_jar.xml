@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Skak:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Skak_jar</output-path>
+    <root id="archive" name="Skak.jar">
+      <element id="module-output" name="Skak" />
+    </root>
+  </artifact>
+</component>

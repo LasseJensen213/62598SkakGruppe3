@@ -11,7 +11,7 @@ import java.awt.*;
 
 //Singleton class controlling the game
 public class GameController {
-    IBoard board;
+    public IBoard board;
     static GameController gameController;
 
     private GameController(){
@@ -44,7 +44,6 @@ public class GameController {
     }
 
     public Move getAIMove(){
-        //TODO: Implement Alpha-Beta
-        return null;
+        return Algorithm.makeMove(board);
     }
 }

@@ -1,4 +1,5 @@
 import controller.GameController;
+import interfaces.IPiece;
 import piece.Move;
 
 import java.util.Scanner;
@@ -15,10 +16,12 @@ public class Main {
             String line = scanner.nextLine();
             if(line.equals("White")){
                 //Engine is white
+                GameController.getInstance().board.setTurn(IPiece.Color.WHITE);
                 Move move = GameController.getInstance().getAIMove();
                 System.out.println("move " + move.toString());//Send move command to WinBoard
                 GameController.getInstance().makeMove(move);
             }else if(Pattern.matches("[a-h]\\d[a-h]\\d",line)){//If string matches a move, eg d2d4
+                GameController.getInstance().board.setTurn(IPiece.Color.BLACK);
                 GameController.getInstance().makeMove(line);//Make the move WinBoard indicated
                 break;
             }

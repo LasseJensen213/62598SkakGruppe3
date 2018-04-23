@@ -15,7 +15,7 @@ public class Board implements IBoard {
 	private ArrayList<IBoard> childBoards = new ArrayList<>();
 	private int additionalPoints = 0;
 	private Point enPassant = null;
-
+	private Move createdByMove = null; //only non-null for child boards
 	private boolean whiteLongCastle = true;
 	private boolean whiteShortCastle = true;
 	private boolean blackLongCastle = true;
@@ -34,7 +34,7 @@ public class Board implements IBoard {
 		this.blackLongCastle = oldBoard.isBlackLongCastle();
 		this.blackShortCastle = oldBoard.isBlackShortCastle();
 		
-				
+		this.createdByMove = newMove;
 		this.chessBoard = oldBoard.chessBoard.clone();
 		this.additionalPoints += newMove.getAdditionalPoints();
 		if (oldBoard.getTurn().equals(Color.WHITE)) {
@@ -201,6 +201,8 @@ public class Board implements IBoard {
 			for (int j = 0; j < 8; j++) {
 				temp = chessBoard[i][j];
 
+				if(temp == null)
+					continue;
 				if (temp.getColor().equals(this.turn)) {
 					if (temp.getType().equals(Type.King)) {
 						king = temp;
@@ -214,6 +216,16 @@ public class Board implements IBoard {
 		finalList.addAll(pieces);
 
 		return finalList;
+	}
+
+	@Override
+	public ArrayList<IBoard> getChildBoards() {
+		return childBoards;
+	}
+
+	@Override
+	public Move getMove() {
+		return createdByMove;
 	}
 
 	@Override

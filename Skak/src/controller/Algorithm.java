@@ -6,15 +6,20 @@ import interfaces.IPiece;
 import moveGeneration.MoveGenerator;
 import piece.Move;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static java.util.Arrays.asList;
+
 public class Algorithm {
 
-    public Move makeMove(IBoard board)
+    public static Move makeMove(IBoard board)
     {
         int minimaxLevel = board.getTurn() == IPiece.Color.WHITE ? 1 : -1;
         long currentTime = System.currentTimeMillis();
         long totalTimeTaken = 0;
         long maxTimeAllowed = 15000; //15 sekunder
-        int depth = 2;
+        int depth = 1;
         Move result = null;
         //Her bruges der iterative deeping, hvor vi checker om vi er gået over tid hver iteration
         //Det er stadig muligt at vi bruger mere end 15 sekunder
@@ -33,35 +38,50 @@ public class Algorithm {
         return result;
     }
 
-    private Move alphaBetaFirstPly(IBoard board , Move lastBestMove ,int minimaxLevel , int alpha , int beta , int currentDepth , int maxDepth)
+    private static Move alphaBetaFirstPly(IBoard board , Move lastBestMove ,int minimaxLevel , int alpha , int beta , int currentDepth , int maxDepth)
     {
         Move move = null; //Dette bliver vores endelige træk
-        int result = 0;
+        int result = 0 , childIter = 0;
         IBoard child = null;
         MoveGenerator mg = new MoveGenerator(board);
         mg.GenerateMoves();
+        ArrayList<IBoard> children = board.getChildBoards();
 
-
-        if(minimaxLevel == 1)
+        if(lastBestMove != null)
         {
-            while(alpha < beta)
+            IBoard[] best = {new Board((Board) board, lastBestMove)};
+            ArrayList<IBoard> newChildren = new ArrayList<>(children.size()+1);
+            newChildren.add(new Board((Board) board, lastBestMove));
+            newChildren.addAll(children);
+            children = newChildren;
+        }
+        if(minimaxLevel == 1) //Maximizer level
+        {
+
+            while(alpha < beta && childIter < children.size())
             {
+                child = children.get(childIter);
+                childIter ++;
                 result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-- , maxDepth);
                 if(result > alpha)
                 {
                     alpha = result;
-
+                    move = child.getMove();
                 }
+
             }
         }
-        else
+        else //Minimizer level
         {
-            while(alpha < beta)
+            while(alpha < beta && childIter < children.size())
             {
+                child = children.get(childIter);
+                childIter++;
                 result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-- , maxDepth);
                 if(result < beta)
                 {
                     beta = result;
+                    move = child.getMove();
                 }
             }
 
@@ -70,13 +90,15 @@ public class Algorithm {
         return move;
     }
 
-    private int alphaBeta(IBoard board , int minimaxLevel , int alpha , int beta , int currentDepth , int maxDepth)
+    private static int alphaBeta(IBoard board , int minimaxLevel , int alpha , int beta , int currentDepth , int maxDepth)
     {
 
         if(currentDepth == 0)
         {
             return StaticEvaluator.StaticEvaulation(board);
         }
+        //TODO Skal måske også checke om man er skakmat
+
         MoveGenerator mg = new MoveGenerator(board);
         IBoard child = null;
         int result = 0;
