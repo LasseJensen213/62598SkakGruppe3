@@ -13,10 +13,12 @@ public class King extends Piece {
 	private boolean unmoved = true;
 
 	ArrayList<Point> legalMoves;
+	ArrayList<Point> inCheckMoves;
 
 	public King(Color color, Point coordinates) {
 		super(Type.King, color, value, coordinates);
 		legalMoves = new ArrayList<>();
+		inCheckMoves = new ArrayList<>();
 	}
 
 	public boolean isCheck() {
@@ -44,6 +46,34 @@ public class King extends Piece {
 		legalMoves.add(new Point(+1, -1));
 
 		return legalMoves;
+	}
+
+	
+	
+	
+	
+	
+	public ArrayList<Point> getInCheckMoves() {
+		for (int i = 1; i < 8; i++) {
+			legalMoves.add(new Point(i, 0));	//Right
+			legalMoves.add(new Point(-i, 0));	//Left
+			legalMoves.add(new Point(0, i));	//Up
+			legalMoves.add(new Point(0, -i));	//Down
+			legalMoves.add(new Point(i, i));	//Up - Right
+			legalMoves.add(new Point(-i, i));	//Up - Left
+			legalMoves.add(new Point(-i, -i));	//Down - Left
+			legalMoves.add(new Point(i, -i));	//Down - Right
+		}
+		legalMoves.add(new Point(-2, -1));
+		legalMoves.add(new Point(-2, +1));
+		legalMoves.add(new Point(-1, +2));
+		legalMoves.add(new Point(+1, +2));
+		legalMoves.add(new Point(+2, +1));
+		legalMoves.add(new Point(+2, -1));
+		legalMoves.add(new Point(+1, -2));
+		legalMoves.add(new Point(-1, -2));
+		
+		return inCheckMoves;
 	}
 
 	public boolean isUnmoved() {

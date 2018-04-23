@@ -82,6 +82,7 @@ public class MoveGenerator {
 
 					// If the move is valid.
 					if (!boardState.outOfBounds(newCoords)) {
+						System.out.println(newCoords.toString());
 						if (!(boardState.allyPiecePresent(newCoords, piece.getColor()))) {
 
 							Move newMove = new Move(piece, piece.getCoordinates(), newCoords);
