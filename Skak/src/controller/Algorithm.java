@@ -100,12 +100,17 @@ public class Algorithm {
         //TODO Skal måske også checke om man er skakmat
 
         MoveGenerator mg = new MoveGenerator(board);
+        mg.GenerateMoves();
+        ArrayList<IBoard> children = board.getChildBoards();
         IBoard child = null;
         int result = 0;
+        int childIter = 0;
         if(minimaxLevel == 1)
         {
-            while(alpha < beta )
+            while(alpha < beta && childIter<children.size())
             {
+                child = children.get(childIter);
+                childIter ++;
                 result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-- , maxDepth);
                 if(result > alpha)
                 {
@@ -116,8 +121,10 @@ public class Algorithm {
         }
         else
         {
-            while(alpha < beta)
+            while(alpha < beta && childIter<children.size())
             {
+                child = children.get(childIter);
+                childIter ++;
                 result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-- , maxDepth);
                 if(result < beta)
                 {
