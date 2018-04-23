@@ -18,6 +18,7 @@ public class StaticEvaluator {
             minimax = p.getColor() == IPiece.Color.WHITE? 1 : -1;
             result += p.getValue()*minimax;
         }
+        result += board.getAdditionalPoints();
         return result;
     }
 }
