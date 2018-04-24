@@ -20,7 +20,7 @@ public class Rook extends Piece {
 	}
 
 	public Rook(IPiece iPiece) {
-		super(Type.Pawn, iPiece.getColor(), value,
+		super(Type.Rook, iPiece.getColor(), value,
 				new Point((int) iPiece.getCoordinates().getX(), (int) iPiece.getCoordinates().getY()));
 		legalMoves = new ArrayList<>();
 
