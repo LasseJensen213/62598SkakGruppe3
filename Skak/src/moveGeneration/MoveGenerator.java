@@ -2,7 +2,9 @@ package moveGeneration;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import data.Board;
 import data.Data;
 import data.Values;
 import interfaces.IBoard;
@@ -36,6 +38,13 @@ public class MoveGenerator {
 	 */
 	public MoveGenerator(IBoard boardState) {
 		this.boardState = boardState;
+
+		bestMoveLastRound = new ArrayList<>();
+		betterThanAvarage = new ArrayList<>();
+		offensiveMoves = new ArrayList<>();
+		officerMoves = new ArrayList<>();
+		pawnMoves = new ArrayList<>();
+
 	}
 
 	/**
@@ -46,35 +55,53 @@ public class MoveGenerator {
 	 */
 	public void GenerateMoves() {
 		ArrayList<IPiece> pieces = boardState.getPieces();
+		HashMap<Point, Boolean> directions = new HashMap<>();
+
+		// true signifies that it's possible to continue in the direction. False - Not.
+		Point rightPoint = new Point(1, 0);
+		Point leftPoint = new Point(-1, 0);
+		Point upPoint = new Point(0, 1);
+		Point downPoint = new Point(0, -1);
+		Point upRightPoint = new Point(1, 1);
+		Point upLeftPoint = new Point(-1, 1);
+		Point downLeftPoint = new Point(-1, -1);
+		Point downRightPoint = new Point(1, -1);
+
+		int i = 0;
 		for (IPiece piece : pieces) {
+
+			System.out.println("i: " + i + " piece: " + piece.getType() + " Coor: " + piece.getCoordinates());
+
+			i++;
+			// Reset directionsmap
+			directions.put(rightPoint, true); // Right
+			directions.put(leftPoint, true); // Left
+			directions.put(upPoint, true); // Up
+			directions.put(downPoint, true); // Down
+			directions.put(upRightPoint, true); // Up - Right
+			directions.put(upLeftPoint, true); // Up - Left
+			directions.put(downLeftPoint, true); // Down - Left
+			directions.put(downRightPoint, true); // Down - Right
+
 			if (piece.getType().equals(IPiece.Type.King)) {
 				this.kingIncheck = ((King) piece).isCheck();
 			}
 
 			// If the king isn't checked.
 			if (!this.kingIncheck) {
-				Point direction = null; // Direction piece is moving in.
-				Point newDirection; // The new direction the piece is moving in. Might be the same as the old one.
-				boolean sameDirectionPossible = true; // True if it's possible for the piece to go further in that
-				// direction.
+
+				// Fetch all legal moves.
 				ArrayList<Point> pieceMoves = piece.getLegalMoves();
 				Point newCoords; // The coordinates after the move.
+				Point newDirection;
 				for (Point p : pieceMoves) {
 					newDirection = getDirection(p);
-					if (direction == null) {
-						direction = newDirection;
-					}
-					// If the piece is moving in the same direction as before.
-					if (direction.equals(newDirection)) {
-						// If it isn't possible to go in the same direction:
-						if (!sameDirectionPossible) {
+
+					// Check to see if it's possible to go in that direction.
+					if (!directions.get(newDirection)) {
+						if (!(piece.getType() == Type.Knight || piece.getType() == Type.King)) {
 							continue;
 						}
-					} else {
-						// If the directions aren't the same, that means that it's possible to go in
-						// that direction.
-						sameDirectionPossible = true;
-						direction = newDirection; // Change the direction
 					}
 
 					// Find the new coordinates.
@@ -82,13 +109,17 @@ public class MoveGenerator {
 
 					// If the move is valid.
 					if (!boardState.outOfBounds(newCoords)) {
-						System.out.println(newCoords.toString());
 						if (!(boardState.allyPiecePresent(newCoords, piece.getColor()))) {
 
 							Move newMove = new Move(piece, piece.getCoordinates(), newCoords);
 							newMove.setOffensive(boardState.enemyPiecePresent(newCoords, piece.getColor()));
+							if (newMove.isOffensive()) {
+								directions.put(newDirection, false);
+							}
 
 							// Pawn moves:
+							// System.out.println("Type: " + piece.getType() + " oldCoords: " +
+							// piece.getCoordinates().toString() + " endcoor: " + newMove.getEndCoor());
 							switch (piece.getType()) {
 							case Bishop:
 								if (newMove.isOffensive()) {
@@ -192,21 +223,22 @@ public class MoveGenerator {
 
 						} else {
 							// Ally present in direction. Can't move in that direction anymore.
-							sameDirectionPossible = false;
+							directions.put(newDirection, false);
 						}
 
 					}
 
 					else {
 						// Direction is now out of bounds.
-						sameDirectionPossible = false;
+						directions.put(newDirection, false);
 					}
 
 				}
 
 			}
 		}
-
+		generateNewBoardStates();
+		System.out.println("EndOfGeneration");
 	}
 
 	private Point getNewPosition(Point point1, Point point2) {
@@ -323,6 +355,40 @@ public class MoveGenerator {
 		}
 		returnPoint.setLocation(x, y);
 		return returnPoint;
+	}
+
+	private void generateNewBoardStates() {
+		if (!bestMoveLastRound.isEmpty()) {
+			for (Move m : bestMoveLastRound) {
+				System.out.println("bestMoveLastRound: " + bestMoveLastRound.size());
+				boardState.generateNewBoardState((Board) boardState, m);
+			}
+		}
+		if (!betterThanAvarage.isEmpty()) {
+			System.out.println("betterThanAvarage: " + betterThanAvarage.size());
+			for (Move m : betterThanAvarage) {
+				boardState.generateNewBoardState((Board) boardState, m);
+			}
+		}
+		if (!offensiveMoves.isEmpty()) {
+			System.out.println("offensiveMoves: " + offensiveMoves.size());
+			for (Move m : offensiveMoves) {
+				boardState.generateNewBoardState((Board) boardState, m);
+			}
+		}
+		if (!officerMoves.isEmpty()) {
+			System.out.println("officerMoves: " + officerMoves.size());
+			for (Move m : officerMoves) {
+				boardState.generateNewBoardState((Board) boardState, m);
+			}
+		}
+		if (!pawnMoves.isEmpty()) {
+			System.out.println("pawnMoves: " + pawnMoves.size());
+			for (Move m : pawnMoves) {
+				boardState.generateNewBoardState((Board) boardState, m);
+			}
+		}
+
 	}
 
 }

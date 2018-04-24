@@ -54,6 +54,7 @@ public class King extends Piece {
 	
 	
 	public ArrayList<Point> getInCheckMoves() {
+		// Can be checked from all directions.
 		for (int i = 1; i < 8; i++) {
 			legalMoves.add(new Point(i, 0));	//Right
 			legalMoves.add(new Point(-i, 0));	//Left
@@ -64,6 +65,7 @@ public class King extends Piece {
 			legalMoves.add(new Point(-i, -i));	//Down - Left
 			legalMoves.add(new Point(i, -i));	//Down - Right
 		}
+		//And from knight moves. 
 		legalMoves.add(new Point(-2, -1));
 		legalMoves.add(new Point(-2, +1));
 		legalMoves.add(new Point(-1, +2));

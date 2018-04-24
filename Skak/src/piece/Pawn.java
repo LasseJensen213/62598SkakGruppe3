@@ -22,9 +22,9 @@ public class Pawn extends Piece {
 		if (super.color.equals(Color.WHITE)) {
 			legalMoves.add(new Point(0, +1));
 
-			// TODO Are we saving the coordinates as 0 to 7 or 1 to 8
+	
 			// If at start position:
-			if (((int) super.getCoordinates().getY()) == 2) {
+			if (((int) super.getCoordinates().getY()) == 1) {
 				legalMoves.add(new Point(0, +2));
 			}
 
@@ -36,7 +36,7 @@ public class Pawn extends Piece {
 		else {
 			legalMoves.add(new Point(0, -1));
 
-			if (((int) super.getCoordinates().getY()) == 7) {
+			if (((int) super.getCoordinates().getY()) == 6) {
 				legalMoves.add(new Point(0, -2));
 
 			}

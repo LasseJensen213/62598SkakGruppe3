@@ -69,8 +69,8 @@ public class Move {
 	}
 
 	public String toString() {
-		return "" + (char) ((startCoor.getX() - 1) + 'a') + startCoor.getY() + (char) ((endCoor.getX() - 1) + 'a')
-				+ endCoor.getY();
+		return "Piece: " + movingPiece.getType() + " StartCoor: " + startCoor.toString() + " endCoor: " + endCoor.toString(); 
+
 	}
 
 }

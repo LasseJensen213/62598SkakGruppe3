@@ -12,10 +12,10 @@ import piece.Move;
 public class Board implements IBoard {
 
 	private IPiece[][] chessBoard;
-	private ArrayList<IBoard> childBoards = new ArrayList<>();
+	private ArrayList<IBoard> childBoards;
 	private int additionalPoints = 0;
 	private Point enPassant = null;
-	private Move createdByMove = null; //only non-null for child boards
+	private Move createdByMove = null; // only non-null for child boards
 	private boolean whiteLongCastle = true;
 	private boolean whiteShortCastle = true;
 	private boolean blackLongCastle = true;
@@ -25,15 +25,16 @@ public class Board implements IBoard {
 
 	public Board() {
 		chessBoard = new IPiece[8][8];
+		childBoards = new ArrayList<>();
 	}
 
 	public Board(Board oldBoard, Move newMove) {
-		oldBoard.addChildBoard(this);
+		this.childBoards = new ArrayList<>();
 		this.whiteLongCastle = oldBoard.isWhiteLongCastle();
 		this.whiteShortCastle = oldBoard.isWhiteShortCastle();
 		this.blackLongCastle = oldBoard.isBlackLongCastle();
 		this.blackShortCastle = oldBoard.isBlackShortCastle();
-		
+
 		this.createdByMove = newMove;
 		this.chessBoard = oldBoard.chessBoard.clone();
 		this.additionalPoints += newMove.getAdditionalPoints();
@@ -48,8 +49,7 @@ public class Board implements IBoard {
 			setPieceNull(newMove.getStartCoor());
 			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
 			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
-			if (newMove.isSpecial())
-			{
+			if (newMove.isSpecial()) {
 				System.out.println("Pawn promo to bishop");
 			}
 			break;
@@ -85,7 +85,8 @@ public class Board implements IBoard {
 		case Pawn:
 			int distY = (int) (newMove.getEndCoor().getY() - newMove.getEndCoor().getY());
 			if (distY == 2 || distY == -2) {
-				// Pawn moves two fields forward. Set the field it passed over to en Passant point
+				// Pawn moves two fields forward. Set the field it passed over to en Passant
+				// point
 				Point enPassantPoint = new Point();
 				switch (newMove.getMovingPiece().getColor()) {
 				case BLACK:
@@ -128,55 +129,49 @@ public class Board implements IBoard {
 			setPieceNull(newMove.getStartCoor());
 			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
 			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
-			if (newMove.isSpecial())
-			{
+			if (newMove.isSpecial()) {
 				System.out.println("Pawn promo to queen");
 			}
 			break;
 		case Rook:
-			
-			if(whiteLongCastle) {
+
+			if (whiteLongCastle) {
 				Point a1Rook = new Point();
 				a1Rook.setLocation(1, 1);
-				if(newMove.getStartCoor().equals(a1Rook)) {
+				if (newMove.getStartCoor().equals(a1Rook)) {
 					this.whiteLongCastle = false;
 				}
 
 			}
-			if(whiteShortCastle) {
+			if (whiteShortCastle) {
 				Point h1Rook = new Point();
 				h1Rook.setLocation(8, 1);
-				if(newMove.getStartCoor().equals(h1Rook)) {
+				if (newMove.getStartCoor().equals(h1Rook)) {
 					this.whiteShortCastle = false;
 				}
 
 			}
-			if(blackLongCastle) {
+			if (blackLongCastle) {
 				Point a8Rook = new Point();
 				a8Rook.setLocation(1, 8);
-				if(newMove.getStartCoor().equals(a8Rook)) {
+				if (newMove.getStartCoor().equals(a8Rook)) {
 					this.blackLongCastle = false;
 				}
 
 			}
-			if(blackShortCastle) {
+			if (blackShortCastle) {
 				Point h8Rook = new Point();
 				h8Rook.setLocation(8, 8);
-				if(newMove.getStartCoor().equals(h8Rook)) {
+				if (newMove.getStartCoor().equals(h8Rook)) {
 					this.blackShortCastle = false;
 				}
-				
+
 			}
-			
-			
-			
-			
-			
+
 			setPieceNull(newMove.getStartCoor());
 			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
 			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
-			if (newMove.isSpecial())
-			{
+			if (newMove.isSpecial()) {
 				System.out.println("Pawn promo to rook");
 			}
 			break;
@@ -201,7 +196,7 @@ public class Board implements IBoard {
 			for (int j = 0; j < 8; j++) {
 				temp = chessBoard[i][j];
 
-				if(temp == null)
+				if (temp == null)
 					continue;
 				if (temp.getColor().equals(this.turn)) {
 					if (temp.getType().equals(Type.King)) {
@@ -235,16 +230,18 @@ public class Board implements IBoard {
 
 	@Override
 	public boolean outOfBounds(Point p) {
-		// TODO Auto-generated method stub
+		if (p.getX() < 0 || p.getY() < 0 || p.getX() > 7 || p.getY() > 7) {
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean allyPiecePresent(Point p, Color color) {
-		if(this.getPiece(p).equals(null)) {
+		if (this.getPiece(p) == null) {
 			return false;
 		}
-		if(this.getPiece(p).getColor().equals(color)) {
+		if (this.getPiece(p).getColor().equals(color)) {
 			return true;
 		}
 		return false;
@@ -252,10 +249,10 @@ public class Board implements IBoard {
 
 	@Override
 	public boolean enemyPiecePresent(Point p, Color color) {
-		if(this.getPiece(p).equals(null)) {
+		if (this.getPiece(p) == null) {
 			return false;
 		}
-		if(this.getPiece(p).getColor().equals(color)) {
+		if (this.getPiece(p).getColor().equals(color)) {
 			return false;
 		}
 		return true;
@@ -268,9 +265,10 @@ public class Board implements IBoard {
 	}
 
 	@Override
-	public IBoard generateNewBoardState(Point p) {
-		// TODO Auto-generated method stub
-		return null;
+	public void generateNewBoardState(Board oldBoard, Move m) {
+		Board newBoardState = new Board(oldBoard,m);
+		this.childBoards.add(newBoardState);
+		System.out.println(m.toString());
 	}
 
 	@Override
