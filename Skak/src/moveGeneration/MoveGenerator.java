@@ -76,7 +76,7 @@ public class MoveGenerator {
 		int i = 0;
 		for (IPiece piece : pieces) {
 
-			System.out.println("i: " + i + " piece: " + piece.getType() + " Coor: " + piece.getCoordinates());
+			//System.out.println("i: " + i + " piece: " + piece.getType() + " Coor: " + piece.getCoordinates());
 
 			i++;
 			// Reset directionsmap

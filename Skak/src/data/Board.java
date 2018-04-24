@@ -88,8 +88,8 @@ public class Board implements IBoard {
 
 		switch (newMove.getMovingPiece().getType()) {
 		case Bishop:
-			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
-			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
+			this.getPiece(newMove.getStartCoor()).setCoordinates(newMove.getEndCoor());
+			this.setPiece(newMove.getEndCoor(), this.getPiece(newMove.getEndCoor()));
 			setPieceNull(newMove.getStartCoor());
 
 			if (newMove.isSpecial()) {
@@ -98,8 +98,8 @@ public class Board implements IBoard {
 			break;
 
 		case King:
-			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
-			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
+			this.getPiece(newMove.getStartCoor()).setCoordinates(newMove.getEndCoor());
+			this.setPiece(newMove.getEndCoor(), this.getPiece(newMove.getEndCoor()));
 			setPieceNull(newMove.getStartCoor());
 			switch (newMove.getMovingPiece().getColor()) {
 			case BLACK:
@@ -117,9 +117,8 @@ public class Board implements IBoard {
 			break;
 
 		case Knight:
-			setPieceNull(newMove.getStartCoor());
-			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
-			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
+			this.getPiece(newMove.getStartCoor()).setCoordinates(newMove.getEndCoor());
+			this.setPiece(newMove.getEndCoor(), this.getPiece(newMove.getEndCoor()));
 			setPieceNull(newMove.getStartCoor());
 
 			if (newMove.isSpecial()) {
@@ -149,8 +148,8 @@ public class Board implements IBoard {
 
 			}
 			
-			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
-			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
+			this.getPiece(newMove.getStartCoor()).setCoordinates(newMove.getEndCoor());
+			this.setPiece(newMove.getEndCoor(), this.getPiece(newMove.getEndCoor()));
 			setPieceNull(newMove.getStartCoor());
 
 			if (newMove.isSpecial()) {
@@ -172,9 +171,9 @@ public class Board implements IBoard {
 			}
 			break;
 		case Queen:
+			this.getPiece(newMove.getStartCoor()).setCoordinates(newMove.getEndCoor());
+			this.setPiece(newMove.getEndCoor(), this.getPiece(newMove.getEndCoor()));
 			setPieceNull(newMove.getStartCoor());
-			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
-			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
 			if (newMove.isSpecial()) {
 				System.out.println("Pawn promo to queen");
 			}
@@ -215,8 +214,8 @@ public class Board implements IBoard {
 
 			}
 
-			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
-			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
+			this.getPiece(newMove.getStartCoor()).setCoordinates(newMove.getEndCoor());
+			this.setPiece(newMove.getEndCoor(), this.getPiece(newMove.getEndCoor()));
 			setPieceNull(newMove.getStartCoor());
 
 			if (newMove.isSpecial()) {
@@ -227,7 +226,7 @@ public class Board implements IBoard {
 			break;
 
 		}
-		//System.out.println(this.toString());
+		System.out.println(this.toString());
 
 	}
 
@@ -328,7 +327,7 @@ public class Board implements IBoard {
 
 	@Override
 	public void setPieceNull(Point p) {
-		chessBoard[((int) p.getX())][((int) p.getY())] = null;
+		this.chessBoard[((int) p.getX())][((int) p.getY())] = null;
 	}
 
 	@Override
