@@ -18,7 +18,7 @@ public class Algorithm {
         int minimaxLevel = board.getTurn() == IPiece.Color.WHITE ? 1 : -1;
         long currentTime = System.currentTimeMillis();
         long totalTimeTaken = 0;
-        long maxTimeAllowed = 15000; //15 sekunder
+        long maxTimeAllowed = 2000; //15 sekunder
         int depth = 1;
         Move result = null;
         //Her bruges der iterative deeping, hvor vi checker om vi er gået over tid hver iteration
@@ -30,10 +30,10 @@ public class Algorithm {
             result = alphaBetaFirstPly(board , result ,minimaxLevel , Integer.MIN_VALUE , Integer.MAX_VALUE , depth , depth);
             long iterationTimePassed = System.currentTimeMillis() - iterationTimeStart;
             totalTimeTaken += iterationTimePassed;
-            System.err.println("Spent " + iterationTimePassed+"ms at depth "+depth + " Total time passed "+totalTimeTaken/1000.0+"s");
+            //System.err.println("Spent " + iterationTimePassed+"ms at depth "+depth + " Total time passed "+totalTimeTaken/1000.0+"s");
             depth++;
         }
-        System.err.println("Spent "+totalTimeTaken+"ms in total. Max Depth achieved "+(depth));
+        //System.err.println("Spent "+totalTimeTaken+"ms in total. Max Depth achieved "+(depth));
 
         return result;
     }

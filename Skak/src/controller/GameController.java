@@ -17,6 +17,7 @@ public class GameController {
     private GameController(){
         try {
             board = FEN.decode("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");//Default start board
+
         } catch (InvalidFENStringException e) {
             e.printStackTrace();//Should not happen
         }
@@ -36,10 +37,10 @@ public class GameController {
 
     public void makeMove(String move){//Converts string (eg d2d4) move to normal move
         //TODO: Check if move is legal
-        int fromX = (int)move.charAt(0)-'a';
-        int fromY = (int)move.charAt(1)-'0';
-        int toX = (int)move.charAt(2)-'a';
-        int toY = (int)move.charAt(3)-'0';
+        int fromX = (int)(move.charAt(0)-'a');
+        int fromY = (int)(move.charAt(1)-'0')-1;
+        int toX = (int)(move.charAt(2)-'a');
+        int toY = (int)(move.charAt(3)-'0')-1;
         makeMove(new Move(board.getPiece(new Point(fromX, fromY)),new Point(fromX, fromY),new Point(toX, toY)));
     }
 

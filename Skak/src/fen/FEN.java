@@ -192,7 +192,7 @@ public class FEN {
         ///////  So far we haven't implemented the clocks
         ///////
         ////////////////////////////////////////////////////////////
-        System.err.println(result);
+        //System.err.println(result);
         return board;
     }
 
@@ -333,7 +333,7 @@ public class FEN {
         finalResult += " " + playerturn + " "+castling+" "+enPassant+" "+halfmoveclock+" "+fullmovenumber;
 
 
-        System.err.println(finalResult);
+        //System.err.println(finalResult);
         return finalResult;
     }
 
