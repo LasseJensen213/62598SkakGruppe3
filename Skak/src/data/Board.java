@@ -44,6 +44,7 @@ public class Board implements IBoard {
 		this.createdByMove = newMove;
 		this.chessBoard = new IPiece[8][8];
 		
+		
 		//this.chessBoard = tempBoard;
 //
 		for(int i = 0;i<8;i++) {

@@ -246,7 +246,7 @@ public class MoveGenerator {
 				System.out.println("Konge i skak");
 			}
 		}
-		generateNewBoardStates();
+		//generateNewBoardStates();
 		// System.out.println("EndOfGeneration");
 		//System.out.println(boardState.toString());
 
@@ -400,6 +400,16 @@ public class MoveGenerator {
 			}
 		}
 
+	}
+	
+	public ArrayList<Move> getFinalList() {
+		ArrayList<Move> finalList = new ArrayList<>();
+		finalList.addAll(bestMoveLastRound);
+		finalList.addAll(betterThanAvarage);
+		finalList.addAll(offensiveMoves);
+		finalList.addAll(officerMoves);
+		finalList.addAll(pawnMoves);
+		return finalList;
 	}
 
 }
