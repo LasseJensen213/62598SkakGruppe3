@@ -415,7 +415,7 @@ public class Board implements IBoard {
 	@Override
 	public String toString() {
 		String toPrint = "";
-		for (int i = 0; i <= 7; i++) {
+		for (int i = 7; i >= 0; i--) {
 			for (int j = 0; j <= 7; j++) {
 				if (chessBoard[j][i] == null) {
 					toPrint += " ";
