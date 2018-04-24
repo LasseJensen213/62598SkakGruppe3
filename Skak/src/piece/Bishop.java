@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import data.Values;
+import interfaces.IPiece;
 
 public class Bishop extends Piece {
 
@@ -15,6 +16,11 @@ public class Bishop extends Piece {
 		super(Type.Bishop, color, value, coordinates);
 		legalMoves = new ArrayList<>();
 		// TODO Auto-generated constructor stub
+	}
+
+	public Bishop(IPiece iPiece) {
+		super(Type.Bishop, iPiece.getColor(), value, iPiece.getCoordinates());
+		legalMoves = new ArrayList<>();
 	}
 
 	@Override

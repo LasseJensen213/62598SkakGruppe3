@@ -3,6 +3,8 @@ package piece;
 import java.util.*;
 
 import data.Values;
+import interfaces.IPiece;
+import interfaces.IPiece.Type;
 
 import java.awt.Point;
 
@@ -13,6 +15,12 @@ public class Queen extends Piece {
 
 	public Queen(Color color, Point coordinates) {
 		super(Type.Queen, color, value, coordinates);
+		legalMoves = new ArrayList<>();
+
+	}
+
+	public Queen(IPiece iPiece) {
+		super(Type.Queen, iPiece.getColor(), value, iPiece.getCoordinates());
 		legalMoves = new ArrayList<>();
 
 	}

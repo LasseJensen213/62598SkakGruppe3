@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import interfaces.IPiece;
 
-public abstract class Piece implements IPiece {
+public abstract class Piece extends Object implements IPiece {
 
 	private Type type;
 	protected Color color;
@@ -20,6 +20,12 @@ public abstract class Piece implements IPiece {
 		this.value = value;
 		this.coordinates = coordinates;
 		moved = false;
+	}
+	public Piece(Piece piece) {
+		this.type = piece.type;
+		this.color = piece.color;
+		this.value = piece.value;
+		this.coordinates = (Point) piece.coordinates.clone();
 	}
 
 	@Override

@@ -3,6 +3,8 @@ package piece;
 import java.util.*;
 
 import data.Values;
+import interfaces.IPiece;
+import interfaces.IPiece.Type;
 
 import java.awt.Point;
 
@@ -14,6 +16,12 @@ public class Pawn extends Piece {
 	public Pawn(Color color, Point coordinates) {
 		super(Type.Pawn, color, value, coordinates);
 		legalMoves = new ArrayList<>();
+	}
+
+	public Pawn(IPiece iPiece) {
+		super(Type.Pawn, iPiece.getColor(), value, iPiece.getCoordinates());
+		legalMoves = new ArrayList<>();
+
 	}
 
 	@Override

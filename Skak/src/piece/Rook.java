@@ -3,6 +3,8 @@ package piece;
 import java.util.ArrayList;
 
 import data.Values;
+import interfaces.IPiece;
+import interfaces.IPiece.Type;
 
 import java.awt.Point;
 
@@ -15,6 +17,12 @@ public class Rook extends Piece {
 	public Rook(Color color, Point coordinates) {
 
 		super(Type.Rook, color, value, coordinates);
+		legalMoves = new ArrayList<>();
+
+	}
+
+	public Rook(IPiece iPiece) {
+		super(Type.Rook, iPiece.getColor(), value, iPiece.getCoordinates());
 		legalMoves = new ArrayList<>();
 
 	}

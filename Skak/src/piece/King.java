@@ -3,6 +3,7 @@ package piece;
 import java.util.ArrayList;
 
 import data.Values;
+import interfaces.IPiece;
 
 import java.awt.Point;
 
@@ -17,6 +18,12 @@ public class King extends Piece {
 
 	public King(Color color, Point coordinates) {
 		super(Type.King, color, value, coordinates);
+		legalMoves = new ArrayList<>();
+		inCheckMoves = new ArrayList<>();
+	}
+
+	public King(IPiece iPiece) {
+		super(Type.King, iPiece.getColor(), value, iPiece.getCoordinates());
 		legalMoves = new ArrayList<>();
 		inCheckMoves = new ArrayList<>();
 	}

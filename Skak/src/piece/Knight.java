@@ -3,6 +3,8 @@ package piece;
 import java.util.ArrayList;
 
 import data.Values;
+import interfaces.IPiece;
+import interfaces.IPiece.Type;
 
 import java.awt.Point;
 
@@ -15,6 +17,11 @@ public class Knight extends Piece {
 		super(Type.Knight, color, value, coordinates);
 		legalMoves = new ArrayList<>();
 		// TODO Auto-generated constructor stub
+	}
+
+	public Knight(IPiece iPiece) {
+		super(Type.Knight, iPiece.getColor(), value, iPiece.getCoordinates());
+		legalMoves = new ArrayList<>();
 	}
 
 	@Override
