@@ -2,6 +2,7 @@ package data;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import interfaces.IBoard;
 import interfaces.IPiece;
@@ -46,18 +47,19 @@ public class Board implements IBoard {
 
 		switch (newMove.getMovingPiece().getType()) {
 		case Bishop:
-			setPieceNull(newMove.getStartCoor());
 			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
 			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
+			setPieceNull(newMove.getStartCoor());
+
 			if (newMove.isSpecial()) {
 				System.out.println("Pawn promo to bishop");
 			}
 			break;
 
 		case King:
-			setPieceNull(newMove.getStartCoor());
 			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
 			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
+			setPieceNull(newMove.getStartCoor());
 			switch (newMove.getMovingPiece().getColor()) {
 			case BLACK:
 				blackLongCastle = false;
@@ -77,6 +79,8 @@ public class Board implements IBoard {
 			setPieceNull(newMove.getStartCoor());
 			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
 			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
+			setPieceNull(newMove.getStartCoor());
+
 			if (newMove.isSpecial()) {
 				System.out.println("Pawn promo to knight");
 			}
@@ -104,9 +108,10 @@ public class Board implements IBoard {
 
 			}
 
-			setPieceNull(newMove.getStartCoor());
 			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
 			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
+			setPieceNull(newMove.getStartCoor());
+
 			if (newMove.isSpecial()) {
 				Point pieceToTake = new Point();
 				switch (newMove.getMovingPiece().getColor()) {
@@ -132,6 +137,7 @@ public class Board implements IBoard {
 			if (newMove.isSpecial()) {
 				System.out.println("Pawn promo to queen");
 			}
+
 			break;
 		case Rook:
 
@@ -168,9 +174,10 @@ public class Board implements IBoard {
 
 			}
 
-			setPieceNull(newMove.getStartCoor());
 			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
 			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
+			setPieceNull(newMove.getStartCoor());
+
 			if (newMove.isSpecial()) {
 				System.out.println("Pawn promo to rook");
 			}
@@ -199,7 +206,7 @@ public class Board implements IBoard {
 				if (temp == null)
 					continue;
 				if (temp.getColor().equals(this.turn)) {
-					if (temp.getType().equals(Type.King)) {
+					if (temp.getType() == Type.King) {
 						king = temp;
 					} else {
 						pieces.add(temp);
@@ -266,9 +273,9 @@ public class Board implements IBoard {
 
 	@Override
 	public void generateNewBoardState(Board oldBoard, Move m) {
-		Board newBoardState = new Board(oldBoard,m);
+		Board newBoardState = new Board(oldBoard, m);
 		this.childBoards.add(newBoardState);
-		System.out.println(m.toString());
+		// System.out.println(m.toString());
 	}
 
 	@Override
@@ -360,6 +367,48 @@ public class Board implements IBoard {
 	public boolean isFieldthreatened(Point field) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		String toPrint = "";
+		for (int i = 0; i <= 7; i++) {
+			for (int j = 0; j <= 7; j++) {
+				if(chessBoard[j][i] == null) {
+					toPrint += " ";
+				}
+				else {
+					switch(chessBoard[j][i].getType()) {
+					case Bishop:
+						toPrint += "b";
+						break;
+					case King:
+						toPrint += "k";
+						break;
+					case Knight:
+						toPrint += "s";
+						break;
+					case Pawn:
+						toPrint += "p";
+						break;
+					case Queen:
+						toPrint += "q";
+						break;
+					case Rook:
+						toPrint += "r";
+						break;
+					default:
+						toPrint += " ";
+						break;
+					
+					}
+				}
+				
+				
+			}
+			toPrint += "\n";
+		}
+		return "Board: \n" + toPrint;
 	}
 
 }

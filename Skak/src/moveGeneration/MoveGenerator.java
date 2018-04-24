@@ -54,6 +54,7 @@ public class MoveGenerator {
 	 *            Arraylist of moves
 	 */
 	public void GenerateMoves() {
+		//System.out.println("Generating for side:" + boardState.getTurn());
 		ArrayList<IPiece> pieces = boardState.getPieces();
 		HashMap<Point, Boolean> directions = new HashMap<>();
 
@@ -70,7 +71,8 @@ public class MoveGenerator {
 		int i = 0;
 		for (IPiece piece : pieces) {
 
-			System.out.println("i: " + i + " piece: " + piece.getType() + " Coor: " + piece.getCoordinates());
+			// System.out.println("i: " + i + " piece: " + piece.getType() + " Coor: " +
+			// piece.getCoordinates());
 
 			i++;
 			// Reset directionsmap
@@ -236,9 +238,14 @@ public class MoveGenerator {
 				}
 
 			}
+			else {
+				System.out.println("Konge i skak");
+			}
 		}
 		generateNewBoardStates();
-		System.out.println("EndOfGeneration");
+		// System.out.println("EndOfGeneration");
+		System.out.println(boardState.toString());
+
 	}
 
 	private Point getNewPosition(Point point1, Point point2) {
@@ -359,31 +366,31 @@ public class MoveGenerator {
 
 	private void generateNewBoardStates() {
 		if (!bestMoveLastRound.isEmpty()) {
+			//System.out.println("bestMoveLastRound: " + bestMoveLastRound.size());
 			for (Move m : bestMoveLastRound) {
-				System.out.println("bestMoveLastRound: " + bestMoveLastRound.size());
 				boardState.generateNewBoardState((Board) boardState, m);
 			}
 		}
 		if (!betterThanAvarage.isEmpty()) {
-			System.out.println("betterThanAvarage: " + betterThanAvarage.size());
+			//System.out.println("betterThanAvarage: " + betterThanAvarage.size());
 			for (Move m : betterThanAvarage) {
 				boardState.generateNewBoardState((Board) boardState, m);
 			}
 		}
 		if (!offensiveMoves.isEmpty()) {
-			System.out.println("offensiveMoves: " + offensiveMoves.size());
+			//System.out.println("offensiveMoves: " + offensiveMoves.size());
 			for (Move m : offensiveMoves) {
 				boardState.generateNewBoardState((Board) boardState, m);
 			}
 		}
 		if (!officerMoves.isEmpty()) {
-			System.out.println("officerMoves: " + officerMoves.size());
+			//System.out.println("officerMoves: " + officerMoves.size());
 			for (Move m : officerMoves) {
 				boardState.generateNewBoardState((Board) boardState, m);
 			}
 		}
 		if (!pawnMoves.isEmpty()) {
-			System.out.println("pawnMoves: " + pawnMoves.size());
+			//System.out.println("pawnMoves: " + pawnMoves.size());
 			for (Move m : pawnMoves) {
 				boardState.generateNewBoardState((Board) boardState, m);
 			}
