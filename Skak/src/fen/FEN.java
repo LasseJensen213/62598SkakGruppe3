@@ -261,8 +261,8 @@ public class FEN {
                     row += pieceStr;
                 }
             }
-            row += y == 7 ? "": "/";
-            boardString[y] = row;
+            row += y == 0 ? "": "/";
+            boardString[7-y] = row;
         }
 
         ////////////////////////////////////////////////////////////
