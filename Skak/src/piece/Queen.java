@@ -20,8 +20,8 @@ public class Queen extends Piece {
 	}
 
 	public Queen(IPiece iPiece) {
-		super(Type.Queen, iPiece.getColor(), value, iPiece.getCoordinates());
-		legalMoves = new ArrayList<>();
+		super(Type.Queen, iPiece.getColor(), value,
+				new Point((int) iPiece.getCoordinates().getX(), (int) iPiece.getCoordinates().getY()));		legalMoves = new ArrayList<>();
 
 	}
 

@@ -20,8 +20,8 @@ public class Knight extends Piece {
 	}
 
 	public Knight(IPiece iPiece) {
-		super(Type.Knight, iPiece.getColor(), value, iPiece.getCoordinates());
-		legalMoves = new ArrayList<>();
+		super(Type.Knight, iPiece.getColor(), value,
+				new Point((int) iPiece.getCoordinates().getX(), (int) iPiece.getCoordinates().getY()));		legalMoves = new ArrayList<>();
 	}
 
 	@Override

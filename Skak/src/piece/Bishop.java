@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import data.Values;
 import interfaces.IPiece;
+import interfaces.IPiece.Type;
 
 public class Bishop extends Piece {
 
@@ -19,7 +20,8 @@ public class Bishop extends Piece {
 	}
 
 	public Bishop(IPiece iPiece) {
-		super(Type.Bishop, iPiece.getColor(), value, iPiece.getCoordinates());
+		super(Type.Bishop, iPiece.getColor(), value,
+				new Point((int) iPiece.getCoordinates().getX(), (int) iPiece.getCoordinates().getY()));
 		legalMoves = new ArrayList<>();
 	}
 

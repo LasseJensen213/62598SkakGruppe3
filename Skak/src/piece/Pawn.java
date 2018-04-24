@@ -19,7 +19,8 @@ public class Pawn extends Piece {
 	}
 
 	public Pawn(IPiece iPiece) {
-		super(Type.Pawn, iPiece.getColor(), value, iPiece.getCoordinates());
+		super(Type.Pawn, iPiece.getColor(), value,
+				new Point((int) iPiece.getCoordinates().getX(), (int) iPiece.getCoordinates().getY()));
 		legalMoves = new ArrayList<>();
 
 	}
@@ -31,7 +32,6 @@ public class Pawn extends Piece {
 		if (super.color.equals(Color.WHITE)) {
 			legalMoves.add(new Point(0, +1));
 
-	
 			// If at start position:
 			if (((int) super.getCoordinates().getY()) == 1) {
 				legalMoves.add(new Point(0, +2));
@@ -57,8 +57,7 @@ public class Pawn extends Piece {
 		return legalMoves;
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		return this.color == Color.BLACK ? "p" : "P";
 	}
 }

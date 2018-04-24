@@ -1,12 +1,10 @@
 package piece;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import data.Values;
 import interfaces.IPiece;
-import interfaces.IPiece.Type;
-
-import java.awt.Point;
 
 public class Rook extends Piece {
 
@@ -22,7 +20,8 @@ public class Rook extends Piece {
 	}
 
 	public Rook(IPiece iPiece) {
-		super(Type.Rook, iPiece.getColor(), value, iPiece.getCoordinates());
+		super(Type.Pawn, iPiece.getColor(), value,
+				new Point((int) iPiece.getCoordinates().getX(), (int) iPiece.getCoordinates().getY()));
 		legalMoves = new ArrayList<>();
 
 	}
@@ -49,8 +48,7 @@ public class Rook extends Piece {
 		this.unmoved = unmoved;
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		return this.color == Color.BLACK ? "r" : "R";
 	}
 
