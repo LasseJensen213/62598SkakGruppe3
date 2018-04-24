@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import data.Values;
 import interfaces.IPiece;
+import interfaces.IPiece.Type;
 
 import java.awt.Point;
 
@@ -23,7 +24,8 @@ public class King extends Piece {
 	}
 
 	public King(IPiece iPiece) {
-		super(Type.King, iPiece.getColor(), value, iPiece.getCoordinates());
+		super(Type.King, iPiece.getColor(), value,
+				new Point((int) iPiece.getCoordinates().getX(), (int) iPiece.getCoordinates().getY()));
 		legalMoves = new ArrayList<>();
 		inCheckMoves = new ArrayList<>();
 	}
