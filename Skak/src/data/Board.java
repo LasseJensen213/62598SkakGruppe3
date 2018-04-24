@@ -227,7 +227,7 @@ public class Board implements IBoard {
 			break;
 
 		}
-		System.out.println(this.toString());
+		//System.out.println(this.toString());
 
 	}
 

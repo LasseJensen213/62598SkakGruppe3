@@ -25,6 +25,7 @@ public abstract class Piece extends Object implements IPiece {
 		this.type = piece.type;
 		this.color = piece.color;
 		this.value = piece.value;
+		this.moved = piece.moved;
 		this.coordinates = (Point) piece.coordinates.clone();
 	}
 
