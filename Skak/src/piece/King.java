@@ -38,6 +38,7 @@ public class King extends Piece {
 
 	@Override
 	public ArrayList<Point> getLegalMoves() {
+		legalMoves = new ArrayList<>(8);
 		if (unmoved) {
 			legalMoves.add(new Point(2, 0)); // Short castle
 			legalMoves.add(new Point(-2, 0)); // Long castle

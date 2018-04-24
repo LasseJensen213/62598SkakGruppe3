@@ -27,6 +27,7 @@ public class Pawn extends Piece {
 	@Override
 	public ArrayList<Point> getLegalMoves() {
 		// If it's a white pawn, it has to move in the positive direction.
+		legalMoves = new ArrayList<>();
 		if (super.color.equals(Color.WHITE)) {
 			legalMoves.add(new Point(0, +1));
 

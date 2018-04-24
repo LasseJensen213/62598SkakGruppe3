@@ -102,9 +102,14 @@ public class Algorithm {
         MoveGenerator mg = new MoveGenerator(board);
         mg.GenerateMoves();
         ArrayList<IBoard> children = board.getChildBoards();
+        if(children.size() == 0)
+        {
+            return StaticEvaluator.StaticEvaulation(board);
+        }
         IBoard child = null;
         int result = 0;
         int childIter = 0;
+
         if(minimaxLevel == 1)
         {
             while(alpha < beta && childIter<children.size())

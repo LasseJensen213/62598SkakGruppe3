@@ -26,6 +26,7 @@ public class Bishop extends Piece {
 	@Override
 	public ArrayList<Point> getLegalMoves() {
 
+		legalMoves = new ArrayList<>();
 		for (int i = 1; i < 8; i++) {
 			legalMoves.add(new Point(+i, +i)); // diagonalt op positiv retning
 			legalMoves.add(new Point(+i, -i)); // diagonalt ned positiv retning
