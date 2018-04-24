@@ -33,7 +33,7 @@ public class Algorithm {
             System.err.println("Spent " + iterationTimePassed+"ms at depth "+depth);
             depth++;
         }
-        System.err.println("Spent "+totalTimeTaken+"ms in total. Max Depth achieved "+(depth-1));
+        System.err.println("Spent "+totalTimeTaken+"ms in total. Max Depth achieved "+(depth));
 
         return result;
     }
@@ -61,8 +61,8 @@ public class Algorithm {
             while(alpha < beta && childIter < children.size())
             {
                 child = children.get(childIter);
-                childIter ++;
-                result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-- , maxDepth);
+                childIter++;
+                result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
                 if(result > alpha)
                 {
                     alpha = result;
@@ -77,7 +77,7 @@ public class Algorithm {
             {
                 child = children.get(childIter);
                 childIter++;
-                result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-- , maxDepth);
+                result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
                 if(result < beta)
                 {
                     beta = result;
@@ -93,6 +93,7 @@ public class Algorithm {
     private static int alphaBeta(IBoard board , int minimaxLevel , int alpha , int beta , int currentDepth , int maxDepth)
     {
 
+
         if(currentDepth == 0)
         {
             return StaticEvaluator.StaticEvaulation(board);
@@ -100,6 +101,7 @@ public class Algorithm {
         //TODO Skal måske også checke om man er skakmat
 
         MoveGenerator mg = new MoveGenerator(board);
+
         mg.GenerateMoves();
         ArrayList<IBoard> children = board.getChildBoards();
         if(children.size() == 0)
@@ -115,8 +117,8 @@ public class Algorithm {
             while(alpha < beta && childIter<children.size())
             {
                 child = children.get(childIter);
-                childIter ++;
-                result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-- , maxDepth);
+                childIter++;
+                result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
                 if(result > alpha)
                 {
                     alpha = result;
@@ -129,8 +131,8 @@ public class Algorithm {
             while(alpha < beta && childIter<children.size())
             {
                 child = children.get(childIter);
-                childIter ++;
-                result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-- , maxDepth);
+                childIter++;
+                result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
                 if(result < beta)
                 {
                     beta = result;
