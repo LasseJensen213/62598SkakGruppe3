@@ -37,7 +37,15 @@ public class Board implements IBoard {
 		this.blackShortCastle = oldBoard.isBlackShortCastle();
 
 		this.createdByMove = newMove;
-		this.chessBoard = oldBoard.chessBoard.clone();
+
+		this.chessBoard = new IPiece[8][8];
+		
+		for(int i = 0;i<oldBoard.chessBoard.length;i++) {
+			System.arraycopy((Object)oldBoard.chessBoard[i], 0, (Object)this.chessBoard[i], 0, oldBoard.chessBoard[0].length);
+		}
+		
+		
+		
 		this.additionalPoints += newMove.getAdditionalPoints();
 		if (oldBoard.getTurn().equals(Color.WHITE)) {
 			this.turn = Color.BLACK;
@@ -273,8 +281,9 @@ public class Board implements IBoard {
 
 	@Override
 	public void generateNewBoardState(Board oldBoard, Move m) {
+		System.out.println("OldBoard: " + oldBoard.toString());
 		Board newBoardState = new Board(oldBoard, m);
-		this.childBoards.add(newBoardState);
+		oldBoard.addChildBoard(newBoardState);
 		// System.out.println(m.toString());
 	}
 
