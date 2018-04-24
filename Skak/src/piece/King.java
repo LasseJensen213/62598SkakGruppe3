@@ -86,4 +86,9 @@ public class King extends Piece {
 		this.unmoved = unmoved;
 	}
 
+	public String toString()
+	{
+		return this.color == Color.BLACK ? "k" : "K";
+	}
+
 }

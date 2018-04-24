@@ -31,4 +31,9 @@ public class Knight extends Piece {
 		return legalMoves;
 	}
 
+	public String toString()
+	{
+		return this.color == Color.BLACK ? "n" : "N";
+	}
+
 }

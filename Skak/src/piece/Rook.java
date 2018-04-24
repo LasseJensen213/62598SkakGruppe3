@@ -40,4 +40,9 @@ public class Rook extends Piece {
 		this.unmoved = unmoved;
 	}
 
+	public String toString()
+	{
+		return this.color == Color.BLACK ? "r" : "R";
+	}
+
 }
