@@ -1,4 +1,5 @@
 import controller.GameController;
+import fen.FEN;
 import interfaces.IPiece;
 import piece.Move;
 
@@ -14,8 +15,10 @@ public class Main {
         //Wait until winboard sends either a move or a command stating the engine is white
 
         while(true){
+
             String line = scanner.nextLine();
-            if(line.equals("White")){
+
+            if(line.equals("white")){
                 //Engine is white
                 GameController.getInstance().board.setTurn(IPiece.Color.WHITE);
                 Move move = GameController.getInstance().getAIMove();
