@@ -148,7 +148,7 @@ public class Board implements IBoard {
 				}
 
 			}
-
+			
 			newMove.getMovingPiece().setCoordinates(newMove.getEndCoor());
 			setPiece(newMove.getEndCoor(), newMove.getMovingPiece());
 			setPieceNull(newMove.getStartCoor());

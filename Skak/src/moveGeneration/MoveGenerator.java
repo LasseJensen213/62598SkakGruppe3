@@ -54,6 +54,11 @@ public class MoveGenerator {
 	 *            Arraylist of moves
 	 */
 	public void GenerateMoves() {
+		this.bestMoveLastRound = new ArrayList<>();
+		this.betterThanAvarage = new ArrayList<>();
+		this.offensiveMoves = new ArrayList<>();
+		this.officerMoves = new ArrayList<>();
+		this.pawnMoves = new ArrayList<>();
 		//System.out.println("Generating for side:" + boardState.getTurn());
 		ArrayList<IPiece> pieces = boardState.getPieces();
 		HashMap<Point, Boolean> directions = new HashMap<>();
@@ -71,8 +76,7 @@ public class MoveGenerator {
 		int i = 0;
 		for (IPiece piece : pieces) {
 
-			// System.out.println("i: " + i + " piece: " + piece.getType() + " Coor: " +
-			// piece.getCoordinates());
+			System.out.println("i: " + i + " piece: " + piece.getType() + " Coor: " + piece.getCoordinates());
 
 			i++;
 			// Reset directionsmap
@@ -244,7 +248,7 @@ public class MoveGenerator {
 		}
 		generateNewBoardStates();
 		// System.out.println("EndOfGeneration");
-		System.out.println(boardState.toString());
+		//System.out.println(boardState.toString());
 
 	}
 

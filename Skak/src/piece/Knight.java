@@ -1,12 +1,10 @@
 package piece;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import data.Values;
 import interfaces.IPiece;
-import interfaces.IPiece.Type;
-
-import java.awt.Point;
 
 public class Knight extends Piece {
 
@@ -21,7 +19,8 @@ public class Knight extends Piece {
 
 	public Knight(IPiece iPiece) {
 		super(Type.Knight, iPiece.getColor(), value,
-				new Point((int) iPiece.getCoordinates().getX(), (int) iPiece.getCoordinates().getY()));		legalMoves = new ArrayList<>();
+				new Point((int) iPiece.getCoordinates().getX(), (int) iPiece.getCoordinates().getY()));
+		legalMoves = new ArrayList<>();
 	}
 
 	@Override
@@ -39,8 +38,7 @@ public class Knight extends Piece {
 		return legalMoves;
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		return this.color == Color.BLACK ? "n" : "N";
 	}
 
