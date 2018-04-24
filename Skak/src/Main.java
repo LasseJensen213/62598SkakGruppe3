@@ -15,7 +15,7 @@ public class Main {
 
         while(true){
             String line = scanner.nextLine();
-            if(line.equals("White")){
+            if(line.equals("white")){
                 //Engine is white
                 GameController.getInstance().board.setTurn(IPiece.Color.WHITE);
                 Move move = GameController.getInstance().getAIMove();
