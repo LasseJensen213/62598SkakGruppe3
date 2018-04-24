@@ -228,7 +228,7 @@ public class Board implements IBoard {
 			break;
 
 		}
-//		System.out.println(this.toString());
+		//System.out.println(this.toString());
 
 	}
 
@@ -257,7 +257,7 @@ public class Board implements IBoard {
 				}
 			}
 		}
-		finalList.add(king);
+		//finalList.add(king);
 		finalList.addAll(pieces);
 
 		return finalList;

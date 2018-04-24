@@ -28,7 +28,7 @@ public class MoveGenerator {
 	private ArrayList<Move> pawnMoves; // The pawn movements.
 
 	// Shit to know about.
-	private boolean kingIncheck;
+	private boolean kingIncheck = false;
 	private IBoard boardState;
 
 	IData data = new Data();
@@ -89,9 +89,9 @@ public class MoveGenerator {
 			directions.put(downLeftPoint, true); // Down - Left
 			directions.put(downRightPoint, true); // Down - Right
 
-			if (piece.getType().equals(IPiece.Type.King)) {
-				this.kingIncheck = ((King) piece).isCheck();
-			}
+//			if (piece.getType().equals(IPiece.Type.King)) {
+//				this.kingIncheck = ((King) piece).isCheck();
+//			}
 
 			// If the king isn't checked.
 			if (!this.kingIncheck) {
@@ -270,7 +270,7 @@ public class MoveGenerator {
 			}
 
 			// Add extra points if it is or is becoming a center pawn.
-			if (1 < newCoords.getY() && newCoords.getY() < 6) {
+			if (1 < newCoords.getX() && newCoords.getX() < 6) {
 				newMove.addAdditionalPoints(Values.CENTERPAWN);
 			}
 
