@@ -31,9 +31,7 @@ public class GameController {
 
     public void makeMove(Move move){
         //TODO: Check if move is legal
-        IPiece piece = board.getPiece(move.getStartCoor());
-        board.setPiece(move.getEndCoor(), piece);
-        board.setPieceNull(move.getStartCoor());
+        board = new Board((Board) board, move);
     }
 
     public void makeMove(String move){//Converts string (eg d2d4) move to normal move

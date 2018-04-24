@@ -73,4 +73,12 @@ public class Move {
 
 	}
 
+	public String algebraicNotation()
+	{
+		String result = ""+(char)(startCoor.x+'a')+(startCoor.y+1);
+		result += ""+((char)(endCoor.x+'a'))+(endCoor.y+1);
+
+		return result;
+	}
+
 }

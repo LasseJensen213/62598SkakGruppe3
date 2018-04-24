@@ -18,7 +18,7 @@ public class Main {
                 //Engine is white
                 GameController.getInstance().board.setTurn(IPiece.Color.WHITE);
                 Move move = GameController.getInstance().getAIMove();
-                System.out.println("move " + move.toString());//Send move command to WinBoard
+                System.out.println("move " + move.algebraicNotation());//Send move command to WinBoard
                 GameController.getInstance().makeMove(move);
             }else if(Pattern.matches("[a-h]\\d[a-h]\\d",line)){//If string matches a move, eg d2d4
                 GameController.getInstance().board.setTurn(IPiece.Color.BLACK);
