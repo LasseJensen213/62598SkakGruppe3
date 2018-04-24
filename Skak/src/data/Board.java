@@ -378,30 +378,64 @@ public class Board implements IBoard {
 					toPrint += " ";
 				}
 				else {
-					switch(chessBoard[j][i].getType()) {
-					case Bishop:
-						toPrint += "b";
+					switch(chessBoard[j][i].getColor()) {
+					case BLACK:
+						switch(chessBoard[j][i].getType()) {
+						case Bishop:
+							toPrint += "b";
+							break;
+						case King:
+							toPrint += "k";
+							break;
+						case Knight:
+							toPrint += "s";
+							break;
+						case Pawn:
+							toPrint += "p";
+							break;
+						case Queen:
+							toPrint += "q";
+							break;
+						case Rook:
+							toPrint += "r";
+							break;
+						default:
+							toPrint += " ";
+							break;
+						
+						}
 						break;
-					case King:
-						toPrint += "k";
-						break;
-					case Knight:
-						toPrint += "s";
-						break;
-					case Pawn:
-						toPrint += "p";
-						break;
-					case Queen:
-						toPrint += "q";
-						break;
-					case Rook:
-						toPrint += "r";
+					case WHITE:
+						switch(chessBoard[j][i].getType()) {
+						case Bishop:
+							toPrint += "B";
+							break;
+						case King:
+							toPrint += "K";
+							break;
+						case Knight:
+							toPrint += "S";
+							break;
+						case Pawn:
+							toPrint += "P";
+							break;
+						case Queen:
+							toPrint += "Q";
+							break;
+						case Rook:
+							toPrint += "R";
+							break;
+						default:
+							toPrint += " ";
+							break;
+						
+						}
 						break;
 					default:
-						toPrint += " ";
 						break;
 					
 					}
+					
 				}
 				
 				
