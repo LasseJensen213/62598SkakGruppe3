@@ -30,7 +30,7 @@ public class Algorithm {
             result = alphaBetaFirstPly(board , result ,minimaxLevel , Integer.MIN_VALUE , Integer.MAX_VALUE , depth , depth);
             long iterationTimePassed = System.currentTimeMillis() - iterationTimeStart;
             totalTimeTaken += iterationTimePassed;
-            System.err.println("Spent " + iterationTimePassed+"ms at depth "+depth);
+            System.err.println("Spent " + iterationTimePassed+"ms at depth "+depth + " Total time passed "+totalTimeTaken/1000.0+"s");
             depth++;
         }
         System.err.println("Spent "+totalTimeTaken+"ms in total. Max Depth achieved "+(depth));
@@ -41,27 +41,27 @@ public class Algorithm {
     private static Move alphaBetaFirstPly(IBoard board , Move lastBestMove ,int minimaxLevel , int alpha , int beta , int currentDepth , int maxDepth)
     {
         Move move = null; //Dette bliver vores endelige træk
-        int result = 0 , childIter = 0;
+        int result = 0 , moveIter = 0;
         IBoard child = null;
         MoveGenerator mg = new MoveGenerator(board);
         mg.GenerateMoves();
-        ArrayList<IBoard> children = board.getChildBoards();
+        ArrayList<Move> moves = new ArrayList<>();
 
         if(lastBestMove != null)
         {
-            IBoard[] best = {new Board((Board) board, lastBestMove)};
-            ArrayList<IBoard> newChildren = new ArrayList<>(children.size()+1);
-            newChildren.add(new Board((Board) board, lastBestMove));
-            newChildren.addAll(children);
-            children = newChildren;
+            moves.add(lastBestMove);
+            moves.addAll(mg.getFinalList());
+        }
+        else {
+            moves = mg.getFinalList();
         }
         if(minimaxLevel == 1) //Maximizer level
         {
 
-            while(alpha < beta && childIter < children.size())
+            while(alpha < beta && moveIter < moves.size())
             {
-                child = children.get(childIter);
-                childIter++;
+                child =  new Board((Board) board, moves.get(moveIter));
+                moveIter++;
                 result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
                 if(result > alpha)
                 {
@@ -73,10 +73,10 @@ public class Algorithm {
         }
         else //Minimizer level
         {
-            while(alpha < beta && childIter < children.size())
+            while(alpha < beta && moveIter < moves.size())
             {
-                child = children.get(childIter);
-                childIter++;
+                child =  new Board((Board) board, moves.get(moveIter));
+                moveIter++;
                 result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
                 if(result < beta)
                 {
@@ -103,21 +103,21 @@ public class Algorithm {
         MoveGenerator mg = new MoveGenerator(board);
 
         mg.GenerateMoves();
-        ArrayList<IBoard> children = board.getChildBoards();
-        if(children.size() == 0)
+        ArrayList<Move> moves = mg.getFinalList();
+        if(moves.size() == 0)
         {
             return StaticEvaluator.StaticEvaulation(board);
         }
         IBoard child = null;
         int result = 0;
-        int childIter = 0;
+        int moveIter = 0;
 
         if(minimaxLevel == 1)
         {
-            while(alpha < beta && childIter<children.size())
+            while(alpha < beta && moveIter<moves.size())
             {
-                child = children.get(childIter);
-                childIter++;
+                child = new Board((Board) board, moves.get(moveIter));
+                moveIter++;
                 result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
                 if(result > alpha)
                 {
@@ -128,10 +128,10 @@ public class Algorithm {
         }
         else
         {
-            while(alpha < beta && childIter<children.size())
+            while(alpha < beta && moveIter<moves.size())
             {
-                child = children.get(childIter);
-                childIter++;
+                child = new Board((Board) board, moves.get(moveIter));
+                moveIter++;
                 result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
                 if(result < beta)
                 {
