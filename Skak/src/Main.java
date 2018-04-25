@@ -30,7 +30,10 @@ public class Main {
         while(true){
             //Make AI move
             Move move = GameController.getInstance().getAIMove();
-            System.out.println("move " + move.algebraicNotation());//Send move command to WinBoard
+            if(move == null)
+                System.out.println("resign");
+            else
+                System.out.println("move " + move.algebraicNotation());//Send move command to WinBoard
             GameController.getInstance().makeMove(move);
 
             //Wait for user move

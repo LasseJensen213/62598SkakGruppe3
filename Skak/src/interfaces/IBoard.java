@@ -41,6 +41,7 @@ public interface IBoard {
 	void addChildBoard(IBoard newBoard);
 	boolean isFieldthreatened(Point field);
 	void generateNewBoardState(Board oldBoard, Move m);
+	IPiece[][] getChessBoard();
 
 	
 	

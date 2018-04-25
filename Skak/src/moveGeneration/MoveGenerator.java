@@ -7,6 +7,7 @@ import java.util.HashMap;
 import data.Board;
 import data.Data;
 import data.Values;
+import datastructures.Stack;
 import interfaces.IBoard;
 import interfaces.IData;
 import interfaces.IPiece;
@@ -410,6 +411,17 @@ public class MoveGenerator {
 		finalList.addAll(officerMoves);
 		finalList.addAll(pawnMoves);
 		return finalList;
+	}
+
+	public Stack<Move> getFinalMoveStack()
+	{
+		Stack<Move> stack = new Stack<>();
+		stack.pushAll(pawnMoves);
+		stack.pushAll(officerMoves);
+		stack.pushAll(offensiveMoves);
+		stack.pushAll(betterThanAvarage);
+		stack.pushAll(bestMoveLastRound);
+		return stack;
 	}
 
 }

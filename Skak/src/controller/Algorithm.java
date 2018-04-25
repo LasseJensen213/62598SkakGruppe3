@@ -1,6 +1,7 @@
 package controller;
 
 import data.Board;
+import datastructures.Stack;
 import interfaces.IBoard;
 import interfaces.IPiece;
 import moveGeneration.MoveGenerator;
@@ -13,75 +14,73 @@ import static java.util.Arrays.asList;
 
 public class Algorithm {
 
-    public static Move makeMove(IBoard board)
+    public static boolean running;
+    public static void makeMove(IBoard board)
     {
+        running = true;
         int minimaxLevel = board.getTurn() == IPiece.Color.WHITE ? 1 : -1;
         long currentTime = System.currentTimeMillis();
         long totalTimeTaken = 0;
-        long maxTimeAllowed = 2000; //15 sekunder
-        int depth = 1;
+        //long maxTimeAllowed = 15000; //15 sekunder
+        int depth = 2;
         Move result = null;
         //Her bruges der iterative deeping, hvor vi checker om vi er gået over tid hver iteration
         //Det er stadig muligt at vi bruger mere end 15 sekunder
-        while(totalTimeTaken < maxTimeAllowed)
+        while(running)
         {
 
             long iterationTimeStart = System.currentTimeMillis();
             result = alphaBetaFirstPly(board , result ,minimaxLevel , Integer.MIN_VALUE , Integer.MAX_VALUE , depth , depth);
+            TimedAlgorithm.getINSTANCE().bestMoveSoFar = result;
             long iterationTimePassed = System.currentTimeMillis() - iterationTimeStart;
             totalTimeTaken += iterationTimePassed;
             //System.err.println("Spent " + iterationTimePassed+"ms at depth "+depth + " Total time passed "+totalTimeTaken/1000.0+"s");
             depth++;
         }
-        //System.err.println("Spent "+totalTimeTaken+"ms in total. Max Depth achieved "+(depth));
+        //System.err.println("Spent "+totalTimeTaken/1000.0+"seconds in total. Max Depth achieved "+(depth-1));
 
-        return result;
+        //return result;
     }
 
     private static Move alphaBetaFirstPly(IBoard board , Move lastBestMove ,int minimaxLevel , int alpha , int beta , int currentDepth , int maxDepth)
     {
         Move move = null; //Dette bliver vores endelige træk
+        Move tmp = null;
         int result = 0 , moveIter = 0;
         IBoard child = null;
         MoveGenerator mg = new MoveGenerator(board);
         mg.GenerateMoves();
-        ArrayList<Move> moves = new ArrayList<>();
+        Stack<Move> moves = new Stack<>();
 
+        moves = mg.getFinalMoveStack();
         if(lastBestMove != null)
-        {
-            moves.add(lastBestMove);
-            moves.addAll(mg.getFinalList());
-        }
-        else {
-            moves = mg.getFinalList();
-        }
+            moves.push(lastBestMove);
+
         if(minimaxLevel == 1) //Maximizer level
         {
 
-            while(alpha < beta && moveIter < moves.size())
+            while(alpha < beta && (tmp = moves.pop()) != null && running)
             {
-                child =  new Board((Board) board, moves.get(moveIter));
-                moveIter++;
+                child =  new Board((Board) board, tmp);
                 result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
                 if(result > alpha)
                 {
                     alpha = result;
-                    move = child.getMove();
+                    move = tmp;
                 }
 
             }
         }
         else //Minimizer level
         {
-            while(alpha < beta && moveIter < moves.size())
+            while(alpha < beta &&(tmp = moves.pop()) != null && running)
             {
-                child =  new Board((Board) board, moves.get(moveIter));
-                moveIter++;
+                child =  new Board((Board) board, tmp);
                 result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
                 if(result < beta)
                 {
                     beta = result;
-                    move = child.getMove();
+                    move = tmp;
                 }
             }
 
@@ -96,47 +95,40 @@ public class Algorithm {
 
         if(currentDepth == 0)
         {
-            return StaticEvaluator.StaticEvaulation(board);
+            return StaticEvaluator.StaticEvaulation(board , maxDepth);
         }
         //TODO Skal måske også checke om man er skakmat
 
         MoveGenerator mg = new MoveGenerator(board);
-
         mg.GenerateMoves();
-        ArrayList<Move> moves = mg.getFinalList();
-        if(moves.size() == 0)
+        Stack<Move> moves = mg.getFinalMoveStack();
+        if(moves.isEmpty())
         {
-            return StaticEvaluator.StaticEvaulation(board);
+            return StaticEvaluator.StaticEvaulation(board , maxDepth-currentDepth);
         }
         IBoard child = null;
+        Move move = null;
         int result = 0;
-        int moveIter = 0;
 
         if(minimaxLevel == 1)
         {
-            while(alpha < beta && moveIter<moves.size())
+            while(alpha < beta && (move = moves.pop()) != null && running)
             {
-                child = new Board((Board) board, moves.get(moveIter));
-                moveIter++;
+                child = new Board((Board) board, move);
                 result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
-                if(result > alpha)
-                {
-                    alpha = result;
-                }
+                alpha = result > alpha ? result : alpha;
+
             }
             return alpha;
         }
         else
         {
-            while(alpha < beta && moveIter<moves.size())
+            while(alpha < beta && (move = moves.pop()) != null && running)
             {
-                child = new Board((Board) board, moves.get(moveIter));
-                moveIter++;
+                child = new Board((Board) board, move);
                 result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
-                if(result < beta)
-                {
-                    beta = result;
-                }
+                beta = result < beta ? result : beta;
+
             }
             return beta;
 

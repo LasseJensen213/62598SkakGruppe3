@@ -28,12 +28,21 @@ public class Rook extends Piece {
 
 	@Override
 	public ArrayList<Point> getLegalMoves() {
-		legalMoves = new ArrayList<>();
-		for (int i = 1; i < 8; i++) {
-			legalMoves.add(new Point(+i, 0)); // Right
-			legalMoves.add(new Point(-i, 0)); // Left
-			legalMoves.add(new Point(0, +i)); // Up
-			legalMoves.add(new Point(0, -i)); // Down
+
+		int leftFields = this.getCoordinates().x;
+		int rightFields = 7 - leftFields;
+		int bottomFields = this.getCoordinates().y;
+		int topFields = 7-bottomFields;
+		legalMoves = new ArrayList<>(leftFields+rightFields+bottomFields+topFields);
+		int i = 0;
+		for(i = 1 ; i<=leftFields ; i++)
+			legalMoves.add(new Point(-i, 0)); //Left
+		for(i = 1 ; i<=rightFields ; i++)
+			legalMoves.add(new Point(+i, 0)); //Right
+		for(i = 1 ; i<=bottomFields ; i++)
+			legalMoves.add(new Point(0, -i)); //Bottom
+		for (i = 1; i <= topFields; i++) {
+			legalMoves.add(new Point(0, +i)); //Top
 
 		}
 

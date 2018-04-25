@@ -27,17 +27,34 @@ public class Queen extends Piece {
 
 	@Override
 	public ArrayList<Point> getLegalMoves() {
-		legalMoves = new ArrayList<>();
-		for (int i = 1; i < 8; i++) {
-			legalMoves.add(new Point(i, 0));	//Right
-			legalMoves.add(new Point(-i, 0));	//Left
-			legalMoves.add(new Point(0, i));	//Up
-			legalMoves.add(new Point(0, -i));	//Down
-			legalMoves.add(new Point(i, i));	//Up - Right
-			legalMoves.add(new Point(-i, i));	//Up - Left
+		int leftFields = this.getCoordinates().x;
+		int rightFields = 7 - leftFields;
+		int bottomFields = this.getCoordinates().y;
+		int topFields = 7-bottomFields;
+		int leftLowerDiag = leftFields < bottomFields ? leftFields : bottomFields;
+		int leftUpperDiag = leftFields < topFields ? leftFields : topFields;
+		int rightLowerDiag = rightFields < bottomFields ? rightFields : bottomFields;
+		int rightUpperDiag = rightFields < topFields ? rightFields : topFields;
+		int i = 0;
+
+		legalMoves = new ArrayList<>(leftFields + rightFields + bottomFields + topFields + leftLowerDiag + leftUpperDiag + rightLowerDiag + rightUpperDiag);
+		for(i = 1 ; i<=leftFields ; i++)
+			legalMoves.add(new Point(-i, 0)); //Left
+		for(i = 1 ; i<=rightFields ; i++)
+			legalMoves.add(new Point(+i, 0)); //Right
+		for(i = 1 ; i<=bottomFields ; i++)
+			legalMoves.add(new Point(0, -i)); //Bottom
+		for (i = 1; i <= topFields; i++)
+			legalMoves.add(new Point(0, +i)); //Top
+
+		for(i = 1 ; i<=leftLowerDiag ; i++)
 			legalMoves.add(new Point(-i, -i));	//Down - Left
+		for(i = 1 ; i<=leftUpperDiag ; i++)
+			legalMoves.add(new Point(-i, i));	//Up - Left
+		for(i = 1 ; i<=rightLowerDiag ; i++)
 			legalMoves.add(new Point(i, -i));	//Down - Right
-		}
+		for(i = 1 ; i<=rightUpperDiag ; i++)
+			legalMoves.add(new Point(i, i));	//Up - Right
 
 		return legalMoves;
 	}

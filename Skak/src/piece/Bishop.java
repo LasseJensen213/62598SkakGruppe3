@@ -28,13 +28,24 @@ public class Bishop extends Piece {
 	@Override
 	public ArrayList<Point> getLegalMoves() {
 
-		legalMoves = new ArrayList<>();
-		for (int i = 1; i < 8; i++) {
-			legalMoves.add(new Point(+i, +i)); // diagonalt op positiv retning
-			legalMoves.add(new Point(+i, -i)); // diagonalt ned positiv retning
-			legalMoves.add(new Point(-i, -i)); // diagonalt ned negative retning
-			legalMoves.add(new Point(-i, +i)); // diagonalt op negative retning
-		}
+		int leftFields = this.getCoordinates().x;
+		int rightFields = 7 - leftFields;
+		int bottomFields = this.getCoordinates().y;
+		int topFields = 7-bottomFields;
+		int leftLowerDiag = leftFields < bottomFields ? leftFields : bottomFields;
+		int leftUpperDiag = leftFields < topFields ? leftFields : topFields;
+		int rightLowerDiag = rightFields < bottomFields ? rightFields : bottomFields;
+		int rightUpperDiag = rightFields < topFields ? rightFields : topFields;
+		int i = 0;
+		legalMoves = new ArrayList<>(leftLowerDiag + leftUpperDiag + rightLowerDiag + rightUpperDiag);
+		for(i = 1 ; i<=leftLowerDiag ; i++)
+			legalMoves.add(new Point(-i, -i));	//Down - Left
+		for(i = 1 ; i<=leftUpperDiag ; i++)
+			legalMoves.add(new Point(-i, i));	//Up - Left
+		for(i = 1 ; i<=rightLowerDiag ; i++)
+			legalMoves.add(new Point(i, -i));	//Down - Right
+		for(i = 1 ; i<=rightUpperDiag ; i++)
+			legalMoves.add(new Point(i, i));	//Up - Right
 
 		return legalMoves;
 	}

@@ -45,6 +45,6 @@ public class GameController {
     }
 
     public Move getAIMove(){
-        return Algorithm.makeMove(board);
+        return TimedAlgorithm.getINSTANCE().getAIMove();
     }
 }

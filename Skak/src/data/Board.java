@@ -280,10 +280,7 @@ public class Board implements IBoard {
 
 	@Override
 	public boolean outOfBounds(Point p) {
-		if (p.getX() < 0 || p.getY() < 0 || p.getX() > 7 || p.getY() > 7) {
-			return true;
-		}
-		return false;
+		return (p.getX() < 0 || p.getY() < 0 || p.getX() > 7 || p.getY() > 7);
 	}
 
 	@Override

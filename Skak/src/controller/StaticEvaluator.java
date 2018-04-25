@@ -2,39 +2,227 @@ package controller;
 
 import interfaces.IBoard;
 import interfaces.IPiece;
-
-import java.awt.*;
-import java.util.ArrayList;
+import piece.King;
 
 public class StaticEvaluator {
 
-    public static int  StaticEvaulation(IBoard board)
-    {
 
-        //Starter med en meget simplem måde at evalurer brættet, lægger bare alle brikkernes værdier sammen
-        int result = 0;
-        Point p = new Point(0 , 0);
+    //Kaare's vurderings funktion
+    private static int[] pawRow = {0 , 0 , -1 , 0 , 2 , 14 , 30 , 0};
+    private static int[] pawLin = {-2 , 0 , 3 , 4 , 5 , 1 , -2 , -2};
+
+    public static int  StaticEvaulation(IBoard board , int currentDepth)
+    {
         IPiece piece = null;
-        int blackValue = 0 , whiteValue = 0;
+        IPiece[][] chessBoard = board.getChessBoard();
+        int blackValue = 0 , whiteValue = 0, result = 0;
         for(int y = 0 ; y<8 ; y++)
         {
             for(int x = 0 ; x<8 ; x++)
             {
-                p.x = x;
-                p.y = y;
-                piece = board.getPiece(p);
-                if(piece != null)
-                {
-                    if(piece.getColor() == IPiece.Color.WHITE)
-                        whiteValue += piece.getValue();
-                    else
-                        blackValue += piece.getValue();
-                }
+                piece = chessBoard[x][y];
+                if(piece == null)
+                    continue;
 
+                switch (piece.getColor())
+                {
+                    case WHITE:
+                        switch (piece.getType())
+                        {
+                            case Bishop:
+                                whiteValue += 300 + 2*coveredFieldsBishop(chessBoard , x ,y , IPiece.Color.WHITE);
+                                break;
+                            case King:
+                                if(((King) piece).isCheck())
+                                    whiteValue += 10000 - 50*currentDepth;
+                                else
+                                    whiteValue += 10000;
+                                break;
+                            case Queen:
+                                whiteValue += 900 + coveredFieldsQueen(chessBoard , x , y , IPiece.Color.WHITE);
+                                break;
+                            case Pawn:
+                                whiteValue += 100 + pawRow[y]+ (pawLin[x]*y)/2;
+                                break;
+                            case Rook:
+                                whiteValue += 500 + 1.5*coveredFieldsRook(chessBoard , x , y , IPiece.Color.WHITE);
+                                break;
+                            case Knight:
+                                whiteValue += 300 + 3.0*(4-distToCenter(x ,y));
+                                break;
+
+                        }
+                        break;
+                    case BLACK:
+                        switch (piece.getType())
+                        {
+                            case Bishop:
+                                blackValue += 300 + 2*coveredFieldsBishop(chessBoard , x ,y , IPiece.Color.BLACK);
+                                break;
+                            case King:
+                                if(((King) piece).isCheck())
+                                    blackValue += 10000 - 50*currentDepth;
+                                else
+                                    blackValue += 10000;
+                                break;
+                            case Queen:
+                                blackValue += 900 + coveredFieldsQueen(chessBoard , x , y , IPiece.Color.BLACK);
+                                break;
+                            case Pawn:
+                                blackValue += 100 + pawRow[y]+ (pawLin[7-x]*y)/2;
+                                break;
+                            case Rook:
+                                blackValue += 500 + 1.5*coveredFieldsRook(chessBoard , x , y , IPiece.Color.BLACK);
+                                break;
+                            case Knight:
+                                blackValue += 300 + 3.0*(4-distToCenter(x , y));
+                                break;
+
+                        }
+                        break;
+                }
             }
         }
-        result = whiteValue -blackValue;
-        result += board.getAdditionalPoints();
+        result = whiteValue - blackValue;
+        //result += board.getAdditionalPoints();
         return result;
+    }
+
+    private static int coveredFieldsBishop(IPiece[][] chessBoard , int x , int y, IPiece.Color color)
+    {
+        int leftFields = x;
+        int rightFields = 7 - leftFields;
+        int bottomFields = y;
+        int topFields = 7-bottomFields;
+        int leftLowerDiag = leftFields < bottomFields ? leftFields : bottomFields;
+        int leftUpperDiag = leftFields < topFields ? leftFields : topFields;
+        int rightLowerDiag = rightFields < bottomFields ? rightFields : bottomFields;
+        int rightUpperDiag = rightFields < topFields ? rightFields : topFields;
+        int i = 0 , coveredFields  = 0;
+        IPiece piece = null;
+        for(i = 1 ; i<=leftLowerDiag ; i++)
+        {
+            piece = chessBoard[x-i][y-i];
+            if(piece == null)
+                coveredFields++;
+            else if(piece.getColor() == color)
+                break;
+            else{
+                coveredFields++;
+                break;
+            }
+        }
+        for(i = 1 ; i<=leftUpperDiag ; i++)
+        {
+            piece = chessBoard[x-i][y+i];
+            if(piece == null)
+                coveredFields++;
+            else if(piece.getColor() == color)
+                break;
+            else{
+                coveredFields++;
+                break;
+            }
+        }
+        for(i = 1 ; i<=rightLowerDiag ; i++)
+        {
+            piece = chessBoard[x+i][y-i];
+            if(piece == null)
+                coveredFields++;
+            else if(piece.getColor() == color)
+                break;
+            else{
+                coveredFields++;
+                break;
+            }
+        }
+        for(i = 1 ; i<=rightUpperDiag ; i++)
+        {
+            piece = chessBoard[x+i][y+i];
+            if(piece == null)
+                coveredFields++;
+            else if(piece.getColor() == color)
+                break;
+            else{
+                coveredFields++;
+                break;
+            }
+        }
+
+        return coveredFields;
+    }
+    private static int coveredFieldsQueen(IPiece[][] chessBoard , int x , int y , IPiece.Color color)
+    {
+        return coveredFieldsRook(chessBoard , x , y , color) + coveredFieldsBishop(chessBoard , x , y , color);
+    }
+    private static int coveredFieldsRook(IPiece[][] chessBoard , int x , int y , IPiece.Color color)
+    {
+        int i = 0 , coveredFields = 0;
+        IPiece piece = null;
+        for(i = x-1 ; i>=0 ; i--)
+        {
+            piece = chessBoard[i][y];
+            if(piece == null) {
+                coveredFields++;
+            }
+            else if(piece.getColor() == color) {
+                break;
+            }
+            else {
+                coveredFields++;
+                break;
+            }
+        }
+        for(i = x+1 ; i<8 ; i++)
+        {
+            piece = chessBoard[i][y];
+            if(piece == null) {
+                coveredFields++;
+            }
+            else if(piece.getColor() == color) {
+                break;
+            }
+            else {
+                coveredFields++;
+                break;
+            }
+        }
+        for(i = y-1 ; i>=0 ; i--)
+        {
+            piece = chessBoard[x][i];
+            if(piece == null) {
+                coveredFields++;
+            }
+            else if(piece.getColor() == color) {
+                break;
+            }
+            else {
+                coveredFields++;
+                break;
+            }
+        }
+        for(i = y+1 ; i<8 ; i++)
+        {
+            piece = chessBoard[x][i];
+            if(piece == null) {
+                coveredFields++;
+            }
+            else if(piece.getColor() == color) {
+                break;
+            }
+            else {
+                coveredFields++;
+                break;
+            }
+        }
+        return coveredFields;
+
+    }
+
+    private static int distToCenter(int x , int y)
+    {
+        double dx = x-3.5;
+        double dy = y-3.5;
+        return (int)Math.sqrt(dx*dx+dy*dy);
     }
 }
