@@ -11,7 +11,7 @@ public class StaticEvaluator {
     private static int[] pawRow = {0 , 0 , -1 , 0 , 2 , 14 , 30 , 0};
     private static int[] pawLin = {-2 , 0 , 3 , 4 , 5 , 1 , -2 , -2};
 
-    public static int  StaticEvaulation(IBoard board , int currentDepth)
+    public static int  StaticEvaulation(IBoard board , int currentDepth , int minimaxLevel)
     {
         IPiece piece = null;
         IPiece[][] chessBoard = board.getChessBoard();
@@ -83,10 +83,34 @@ public class StaticEvaluator {
                 }
             }
         }
-        result = whiteValue - blackValue;
         //result += board.getAdditionalPoints();
+        IPiece.Color aiPLayerCol , adversaryCol;
+        if(minimaxLevel == 0)                         //At maximizer level
+        {
+            if(board.getTurn() == IPiece.Color.BLACK) //AI Player is black
+            {
+                result = blackValue - whiteValue;
+            }
+            else                                     //AI Player is white
+            {
+                result = whiteValue - blackValue;
+            }
+        }
+        else                                          //At Minimizer level
+        {
+            if(board.getTurn() == IPiece.Color.BLACK) //AI Player is white
+            {
+                result = whiteValue - blackValue;
+            }
+            else                                      //AI Player is black
+            {
+                result = blackValue - whiteValue;
+            }
+
+        }
         return result;
     }
+
 
     private static int coveredFieldsBishop(IPiece[][] chessBoard , int x , int y, IPiece.Color color)
     {

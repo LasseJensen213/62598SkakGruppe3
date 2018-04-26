@@ -13,15 +13,14 @@ import java.util.Arrays;
 import static java.util.Arrays.asList;
 
 public class Algorithm {
-
+    private static IPiece.Color AIColor;
     public static boolean running;
     public static void makeMove(IBoard board)
     {
         running = true;
-        int minimaxLevel = board.getTurn() == IPiece.Color.WHITE ? 1 : -1;
+        AIColor = board.getTurn();
         long currentTime = System.currentTimeMillis();
         long totalTimeTaken = 0;
-        //long maxTimeAllowed = 15000; //15 sekunder
         int depth = 2;
         Move result = null;
         //Her bruges der iterative deeping, hvor vi checker om vi er gået over tid hver iteration
@@ -29,11 +28,11 @@ public class Algorithm {
         while(running)
         {
             long iterationTimeStart = System.currentTimeMillis();
-            result = alphaBetaFirstPly(board , result ,minimaxLevel , Integer.MIN_VALUE , Integer.MAX_VALUE , depth , depth);
+            result = alphaBetaFirstPly(board , result ,0 , Integer.MIN_VALUE , Integer.MAX_VALUE , depth , depth);
             TimedAlgorithm.getINSTANCE().bestMoveSoFar = result;
             long iterationTimePassed = System.currentTimeMillis() - iterationTimeStart;
             totalTimeTaken += iterationTimePassed;
-            //System.err.println("Spent " + iterationTimePassed+"ms at depth "+depth + " Total time passed "+totalTimeTaken/1000.0+"s");
+            System.err.println("Spent " + iterationTimePassed+"ms at depth "+depth + " Total time passed "+totalTimeTaken/1000.0+"s");
             depth++;
         }
         //System.err.println("Spent "+totalTimeTaken/1000.0+"seconds in total. Max Depth achieved "+(depth-1));
@@ -52,15 +51,19 @@ public class Algorithm {
         Stack<Move> moves = new Stack<>();
 
         moves = mg.getFinalMoveStack();
+        if(moves.isEmpty())
+        {
+            return null;
+        }
         if(lastBestMove != null)
             moves.push(lastBestMove);
-        if(minimaxLevel == 1) //Maximizer level
+        if(minimaxLevel == 0) //Maximizer level
         {
 
             while(alpha < beta && (tmp = moves.pop()) != null && running)
             {
                 child =  new Board((Board) board, tmp);
-                result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
+                result = alphaBeta(child , 1 , alpha , beta , currentDepth-1 , maxDepth);
                 if(result > alpha)
                 {
                     alpha = result;
@@ -75,7 +78,7 @@ public class Algorithm {
             while(alpha < beta &&(tmp = moves.pop()) != null && running)
             {
                 child =  new Board((Board) board, tmp);
-                result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
+                result = alphaBeta(child , 0 , alpha , beta , currentDepth-1 , maxDepth);
                 if(result < beta)
                 {
                     beta = result;
@@ -94,7 +97,7 @@ public class Algorithm {
 
         if(currentDepth == 0)
         {
-            return StaticEvaluator.StaticEvaulation(board , maxDepth);
+            return StaticEvaluator.StaticEvaulation(board , maxDepth , minimaxLevel);
         }
         //TODO Skal måske også checke om man er skakmat
 
@@ -103,18 +106,18 @@ public class Algorithm {
         Stack<Move> moves = mg.getFinalMoveStack();
         if(moves.isEmpty())
         {
-            return StaticEvaluator.StaticEvaulation(board , maxDepth-currentDepth);
+            return StaticEvaluator.StaticEvaulation(board , maxDepth-currentDepth , minimaxLevel);
         }
         IBoard child = null;
         Move move = null;
         int result = 0;
 
-        if(minimaxLevel == 1)
+        if(minimaxLevel == 0)
         {
             while(alpha < beta && (move = moves.pop()) != null && running)
             {
                 child = new Board((Board) board, move);
-                result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
+                result = alphaBeta(child , 1 , alpha , beta , currentDepth-1 , maxDepth);
                 alpha = result > alpha ? result : alpha;
 
             }
@@ -125,7 +128,7 @@ public class Algorithm {
             while(alpha < beta && (move = moves.pop()) != null && running)
             {
                 child = new Board((Board) board, move);
-                result = alphaBeta(child , minimaxLevel*-1 , alpha , beta , currentDepth-1 , maxDepth);
+                result = alphaBeta(child , 0 , alpha , beta , currentDepth-1 , maxDepth);
                 beta = result < beta ? result : beta;
 
             }

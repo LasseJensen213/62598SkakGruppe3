@@ -26,7 +26,7 @@ public class FEN {
         String castling = parts[2];
         String enPassant = parts[3];
         String halfmoveClock = parts[4];
-        String fillmoveNumber = parts[5];
+        String fullmoveNumber = parts[5];
         Board board = new Board();
         IPiece piece = null;
         String result = "";
@@ -91,9 +91,11 @@ public class FEN {
                             break;
                         case 'k':
                             piece = new King(IPiece.Color.BLACK , point);
+                            board.setBlackKing((King) piece);
                             break;
                         case 'K':
                             piece = new King(IPiece.Color.WHITE , point);
+                            board.setWhiteKing((King) piece);
                             break;
                     }
                     board.setPiece(point , piece);
@@ -188,12 +190,19 @@ public class FEN {
             }
 
         }
+        ////////////////////////////////////////////////////////////
+        ///////
+        ///////  Setting full move number
+        ///////
+        ////////////////////////////////////////////////////////////
+        board.setFullMoves(Integer.parseInt(fullmoveNumber));
 
         ////////////////////////////////////////////////////////////
         ///////
-        ///////  So far we haven't implemented the clocks
+        ///////  Setting halfmove clocks
         ///////
         ////////////////////////////////////////////////////////////
+        board.setHalfMoveClock(Integer.parseInt(halfmoveClock));
         //System.err.println(result);
         return board;
     }
@@ -205,8 +214,8 @@ public class FEN {
         String playerturn = "";
         String castling = "";
         String enPassant = "";
-        String halfmoveclock = "0";
-        String fullmovenumber  = "0";
+        String halfmoveclock = ""+board.getHalfMoveClock();
+        String fullmovenumber  = ""+board.getFullMoves();
         ////////////////////////////////////////////////////////////
         ///////
         ///////  Create board string

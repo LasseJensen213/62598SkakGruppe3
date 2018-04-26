@@ -74,6 +74,7 @@ public class MoveGenerator {
 		Point downLeftPoint = new Point(-1, -1);
 		Point downRightPoint = new Point(1, -1);
 
+		Color adversaryColor = boardState.getTurn() == Color.BLACK ? Color.WHITE : Color.BLACK;
 		int i = 0;
 		for (IPiece piece : pieces) {
 
@@ -120,6 +121,9 @@ public class MoveGenerator {
 
 							Move newMove = new Move(piece, piece.getCoordinates(), newCoords);
 							newMove.setOffensive(boardState.enemyPiecePresent(newCoords, piece.getColor()));
+							if(boardState.isKingInCheckAfterMove(boardState.getTurn() , newMove))
+								continue;
+							newMove.setIsCheckMove(boardState.isKingInCheckAfterMove(adversaryColor , newMove ));
 							if (newMove.isOffensive()) {
 								directions.put(newDirection, false);
 							}

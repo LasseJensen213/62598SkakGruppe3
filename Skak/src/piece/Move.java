@@ -12,6 +12,7 @@ public class Move {
 	private boolean offensive; // Taking a piece
 	private int additionalPoints = 0; // Add extra points to the move.
 	private boolean special = false; // For en passant and pawn evolution.
+	private boolean checkMove = false; //This move checking other player
 
 	public Move(IPiece movingPiece, Point startCoor, Point endCoor) {
 		super();
@@ -20,6 +21,8 @@ public class Move {
 		this.endCoor = endCoor;
 	}
 
+	public boolean getIsCheckMove(){return checkMove;}
+	public void setIsCheckMove(boolean checkMove){this.checkMove = checkMove;}
 	public IPiece getMovingPiece() {
 		return movingPiece;
 	}

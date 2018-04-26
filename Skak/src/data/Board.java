@@ -7,6 +7,7 @@ import interfaces.IBoard;
 import interfaces.IPiece;
 import interfaces.IPiece.Color;
 import interfaces.IPiece.Type;
+import javafx.scene.effect.Light;
 import piece.Bishop;
 import piece.King;
 import piece.Knight;
@@ -26,8 +27,13 @@ public class Board implements IBoard {
 	private boolean whiteShortCastle = true;
 	private boolean blackLongCastle = true;
 	private boolean blackShortCastle = true;
-
+	private int fullmoveNumber = 1;
+	private int halfMoveClock = 0;
 	private Color turn = Color.WHITE;
+	private King blacKing;
+	private King whiteKing;
+	private boolean isChecked = false;
+	private static int[] knightMoves = {0x21 , 0x1F , 0x12 , 0x0E , -0x21 , -0x1F , -0x12 , -0x0E}; // Mainly using this for checking if king is in chech
 
 	public Board() {
 		chessBoard = new IPiece[8][8];
@@ -40,11 +46,13 @@ public class Board implements IBoard {
 		this.whiteShortCastle = oldBoard.isWhiteShortCastle();
 		this.blackLongCastle = oldBoard.isBlackLongCastle();
 		this.blackShortCastle = oldBoard.isBlackShortCastle();
-
 		this.createdByMove = newMove;
 		this.chessBoard = new IPiece[8][8];
-		
-		
+		if(newMove.isOffensive() || newMove.getMovingPiece().getType() == Type.Pawn)
+			this.halfMoveClock=0;
+		else
+			this.halfMoveClock=oldBoard.halfMoveClock+1;
+		this.isChecked = newMove.getIsCheckMove();
 		//this.chessBoard = tempBoard;
 //
 		for(int i = 0;i<8;i++) {
@@ -56,6 +64,10 @@ public class Board implements IBoard {
 						break;
 					case King:
 						this.chessBoard[i][j] = (King) new King(oldBoard.chessBoard[i][j]);
+						if(chessBoard[i][j].getColor() == Color.WHITE)
+							this.whiteKing = (King)chessBoard[i][j];
+						else
+							this.blacKing = (King)chessBoard[i][j];
 						break;
 					case Knight:
 						this.chessBoard[i][j] = (Knight) new Knight(oldBoard.chessBoard[i][j]);
@@ -83,8 +95,10 @@ public class Board implements IBoard {
 		this.additionalPoints += newMove.getAdditionalPoints();
 		if (oldBoard.getTurn().equals(Color.WHITE)) {
 			this.turn = Color.BLACK;
+			this.fullmoveNumber = oldBoard.fullmoveNumber;
 		} else {
 			this.turn = Color.WHITE;
+			this.fullmoveNumber = oldBoard.fullmoveNumber+1;
 		}
 
 		switch (newMove.getMovingPiece().getType()) {
@@ -130,6 +144,7 @@ public class Board implements IBoard {
 
 		case Pawn:
 			int distY = (int) (newMove.getStartCoor().getY() - newMove.getEndCoor().getY());
+			this.halfMoveClock = 0;
 			if (distY == 2 || distY == -2) {
 				// Pawn moves two fields forward. Set the field it passed over to en Passant
 				// point
@@ -488,6 +503,373 @@ public class Board implements IBoard {
 		return chessBoard;
 	}
 
-	
-	
+	@Override
+	public int getFullMoves() {
+		return fullmoveNumber;
+	}
+
+	@Override
+	public void setFullMoves(int fullMoveNumber) {
+		this.fullmoveNumber = fullMoveNumber;
+	}
+
+	@Override
+	public int getHalfMoveClock() {
+		return halfMoveClock;
+	}
+
+	@Override
+	public void setHalfMoveClock(int halfMoveClock) {
+		this.halfMoveClock = halfMoveClock;
+	}
+
+	@Override
+	public boolean isKingInCheckAfterMove(Color color , Move move) {
+		King currentKing = null;
+		King adversaryKing = null;
+		IPiece possibleCapture = chessBoard[move.getEndCoor().x][move.getEndCoor().y]; // Need to save this for when undoing move
+		chessBoard[move.getStartCoor().x][move.getStartCoor().y] = null;
+		chessBoard[move.getEndCoor().x][move.getEndCoor().y] = move.getMovingPiece();
+		int kingX , kingY;
+		if(color == Color.WHITE)
+		{
+			currentKing = whiteKing;
+			adversaryKing = blacKing;
+			if(move.getMovingPiece().getType() == Type.King) //We need to check if we are moving the king, that we aren't moving into the space of the other king
+			{
+				kingX = move.getEndCoor().x;
+				kingY = move.getEndCoor().y;
+				int dx = Math.abs(kingX - adversaryKing.getCoordinates().x);
+				int dy = Math.abs(kingY - adversaryKing.getCoordinates().y);
+				if((dx == 0 || dx == 1) && (dy == 0 || dy==1))
+				{
+					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+					chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+					return true;
+				}
+
+			}
+			else
+			{
+
+				kingX = currentKing.getCoordinates().x;
+				kingY = currentKing.getCoordinates().y;
+			}
+
+		}
+		else
+		{
+			currentKing = blacKing;
+			adversaryKing = whiteKing;
+			if(move.getMovingPiece().getType() == Type.King)
+			{
+				kingX = move.getEndCoor().x;
+				kingY = move.getEndCoor().y;
+				int dx = Math.abs(kingX - adversaryKing.getCoordinates().x);
+				int dy = Math.abs(kingY - adversaryKing.getCoordinates().y);
+				if((dx == 0 || dx == 1) && (dy == 0 || dy==1))
+				{
+					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+					chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+					return true;
+				}
+			}
+			else
+			{
+				if(currentKing == null)
+					System.out.println("what");
+				kingX = currentKing.getCoordinates().x;
+				kingY = currentKing.getCoordinates().y;
+			}
+		}
+
+		int leftFields = kingX; 									 //Distance to left border
+		int rightFields = 7 - leftFields;          									 //Distance to right border
+		int bottomFields = kingY;									 //Distance to bottom border
+		int topFields = 7-bottomFields;												 //Distance to top border
+		int leftLowerDiag = leftFields < bottomFields ? leftFields : bottomFields;   //How many lower left diagonal fields before hitting either left or bottom border
+		int leftUpperDiag = leftFields < topFields ? leftFields : topFields;		 //How many upper left diagonal fields before hitting either left or top border
+		int rightLowerDiag = rightFields < bottomFields ? rightFields : bottomFields;//How many lower right diagonal fields before hitting either right or bottom border
+		int rightUpperDiag = rightFields < topFields ? rightFields : topFields;		 //How many upper right diagonal fields before hitting either right or top border
+		int i = 0 , x ,y;
+		x = kingX;
+		y = kingY;
+		IPiece piece = null;
+
+		for(i = 1 ; i<=leftFields ; i++) // Check to the left for enemy rooks or queens
+		{
+			x--;
+			piece = chessBoard[x][y];
+			if(piece != null)
+			{
+				if(piece.getColor() == currentKing.getColor()) // Ally piece is blocking this passage
+					break;
+				else
+				{
+					if(piece.getType() == Type.Rook || piece.getType() == Type.Queen)
+					{
+						chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+						chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+						return true;
+					}
+					break; // Break because the enenemy piece is blocking for its own pieces
+				}
+			}
+		}
+		x = kingX;
+		y = kingY;
+		for(i = 1 ; i<=rightFields ; i++) // Check to the right for enemy rooks or queens
+		{
+			x++;
+			piece = chessBoard[x][y];
+			if(piece != null)
+			{
+				if(piece.getColor() == currentKing.getColor()) // Ally piece is blocking this passage
+					break;
+				else
+				{
+					if(piece.getType() == Type.Rook || piece.getType() == Type.Queen)
+					{
+						chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+						chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+						return true;
+					}
+					break; // Break because the enenemy piece is blocking for its own pieces
+				}
+			}
+		}
+		x = kingX;
+		y = kingY;
+		for(i = 1 ; i<=bottomFields ; i++) // Check to the bottom for enemy rooks or queens
+		{
+			y--;
+			piece = chessBoard[x][y];
+			if(piece != null)
+			{
+				if(piece.getColor() == currentKing.getColor()) // Ally piece is blocking this passage
+					break;
+				else
+				{
+					if(piece.getType() == Type.Rook || piece.getType() == Type.Queen)
+					{
+						chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+						chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+						return true;
+					}
+					break; // Break because the enenemy piece is blocking for its own pieces
+				}
+			}
+		}
+		x = kingX;
+		y = kingY;
+		for(i = 1 ; i<=topFields ; i++) // Check to the top for enemy rooks or queens
+		{
+			y++;
+			piece = chessBoard[x][y];
+			if(piece != null)
+			{
+				if(piece.getColor() == currentKing.getColor()) // Ally piece is blocking this passage
+					break;
+				else
+				{
+					if(piece.getType() == Type.Rook || piece.getType() == Type.Queen)
+					{
+						chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+						chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+						return true;
+					}
+					break; // Break because the enenemy piece is blocking for its own pieces
+				}
+
+			}
+		}
+		//Need to check for enemy pawns now
+		if(currentKing.getColor() == Color.WHITE && currentKing.getCoordinates().y!=7)
+		{
+			if(kingX != 0)
+			{
+				piece = chessBoard[currentKing.getCoordinates().x-1][currentKing.getCoordinates().y+1];
+				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Pawn)
+				{
+					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+					chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+					return true;
+				}
+			}
+			if(kingX != 7)
+			{
+				piece = chessBoard[currentKing.getCoordinates().x+1][currentKing.getCoordinates().y+1];
+				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Pawn)
+				{
+					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+					chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+					return true;
+				}
+			}
+		}
+		else if(currentKing.getColor() == Color.BLACK && currentKing.getCoordinates().y != 0)
+		{
+
+			if(kingX != 0)
+			{
+				piece = chessBoard[currentKing.getCoordinates().x-1][currentKing.getCoordinates().y-1];
+				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Pawn)
+				{
+					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+					chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+					return true;
+				}
+			}
+			if(kingX != 7)
+			{
+				piece = chessBoard[currentKing.getCoordinates().x+1][currentKing.getCoordinates().y-1];
+				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Pawn)
+				{
+					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+					chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+					return true;
+				}
+			}
+		}
+
+		//Checking diagonals now for bishops / Queens
+		x = kingX;
+		y = kingY;
+		for(i = 1 ; i<leftLowerDiag ; i++)
+		{
+			x--;
+			y--;
+			piece = chessBoard[x][y];
+			if(piece != null)
+			{
+				if(piece.getColor() == currentKing.getColor()) // Ally piece is blocking this passage
+					break;
+				else
+				{
+					if(piece.getType() == Type.Bishop || piece.getType() == Type.Queen)
+					{
+						chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+						chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+						return true;
+					}
+					break; // Break because the enenemy piece is blocking for its own pieces
+				}
+			}
+		}
+		x = kingX;
+		y = kingY;
+		for(i = 1 ; i<leftUpperDiag ; i++)
+		{
+			x--;
+			y++;
+			piece = chessBoard[x][y];
+			if(piece != null)
+			{
+				if(piece.getColor() == currentKing.getColor()) // Ally piece is blocking this passage
+					break;
+				else
+				{
+					if(piece.getType() == Type.Bishop || piece.getType() == Type.Queen)
+					{
+						chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+						chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+						return true;
+					}
+					break; // Break because the enenemy piece is blocking for its own pieces
+				}
+			}
+		}
+		x = kingX;
+		y = kingY;
+		for(i = 1 ; i<rightLowerDiag ; i++)
+		{
+			x++;
+			y--;
+			piece = chessBoard[x][y];
+			if(piece != null)
+			{
+				if(piece.getColor() == currentKing.getColor()) // Ally piece is blocking this passage
+					break;
+				else
+				{
+					if(piece.getType() == Type.Bishop || piece.getType() == Type.Queen)
+					{
+						chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+						chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+						return true;
+					}
+					break; // Break because the enenemy piece is blocking for its own pieces
+				}
+			}
+		}
+		x = kingX;
+		y = kingY;
+		for(i = 1 ; i<rightUpperDiag ; i++)
+		{
+			x++;
+			y++;
+			piece = chessBoard[x][y];
+			if(piece != null)
+			{
+				if(piece.getColor() == currentKing.getColor()) // Ally piece is blocking this passage
+					break;
+				else
+				{
+					if(piece.getType() == Type.Bishop || piece.getType() == Type.Queen)
+					{
+						chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+						chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+						return true;
+					}
+					break; // Break because the enenemy piece is blocking for its own pieces
+				}
+			}
+		}
+		//Now we check if a knight is in range
+		ArrayList<Point> validKnightMoves = new ArrayList<>();
+		int hexPos = kingX + kingY<<4 , newPos;
+		for(i = 0 ; i<8 ; i++)
+		{
+			newPos = knightMoves[i] + hexPos;
+			if( (newPos & 0x88) == 0 )
+			{
+				piece = chessBoard[newPos&15][(newPos&240)>>4];
+				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Knight)
+				{
+					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+					chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+					return true;
+				}
+			}
+
+
+		}
+
+
+		chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+		chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+		return false;
+	}
+
+	@Override
+	public void setBlackKing(King king) {
+		this.blacKing = king;
+	}
+
+	@Override
+	public void setWhiteKing(King king) {
+		this.whiteKing = king;
+	}
+
+	@Override
+	public boolean isChecked() {
+		return isChecked;
+	}
+
+	@Override
+	public void setIsChecked(boolean isChecked) {
+		this.isChecked = isChecked;
+	}
+
+
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import data.Board;
 import interfaces.IPiece.Color;
+import piece.King;
 import piece.Move;
 
 
@@ -42,6 +43,15 @@ public interface IBoard {
 	boolean isFieldthreatened(Point field);
 	void generateNewBoardState(Board oldBoard, Move m);
 	IPiece[][] getChessBoard();
+	int getFullMoves();
+	void setFullMoves(int fullMoveNumber);
+	int getHalfMoveClock();
+	void setHalfMoveClock(int halfMoveClock);
+	boolean isKingInCheckAfterMove(Color color , Move move);
+	void setBlackKing(King king);
+	void setWhiteKing(King king);
+	boolean isChecked();
+	void setIsChecked(boolean isChecked);
 
 	
 	
