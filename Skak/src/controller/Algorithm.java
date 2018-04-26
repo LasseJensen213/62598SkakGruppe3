@@ -28,7 +28,6 @@ public class Algorithm {
         //Det er stadig muligt at vi bruger mere end 15 sekunder
         while(running)
         {
-
             long iterationTimeStart = System.currentTimeMillis();
             result = alphaBetaFirstPly(board , result ,minimaxLevel , Integer.MIN_VALUE , Integer.MAX_VALUE , depth , depth);
             TimedAlgorithm.getINSTANCE().bestMoveSoFar = result;
@@ -55,7 +54,6 @@ public class Algorithm {
         moves = mg.getFinalMoveStack();
         if(lastBestMove != null)
             moves.push(lastBestMove);
-
         if(minimaxLevel == 1) //Maximizer level
         {
 
@@ -70,6 +68,7 @@ public class Algorithm {
                 }
 
             }
+
         }
         else //Minimizer level
         {

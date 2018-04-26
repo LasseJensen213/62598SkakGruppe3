@@ -129,7 +129,7 @@ public class Board implements IBoard {
 			break;
 
 		case Pawn:
-			int distY = (int) (newMove.getEndCoor().getY() - newMove.getEndCoor().getY());
+			int distY = (int) (newMove.getStartCoor().getY() - newMove.getEndCoor().getY());
 			if (distY == 2 || distY == -2) {
 				// Pawn moves two fields forward. Set the field it passed over to en Passant
 				// point

@@ -10,11 +10,13 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.FileAttribute;
+import java.util.Date;
 
 public class FEN {
 
 
-    private static final String FILE_PATH = "FENlog.txt";
+    public static String FILE_PATH = "FENlog.txt";
 
     public static Board decode(String FEN) throws InvalidFENStringException
     {
@@ -341,8 +343,10 @@ public class FEN {
     {
 
         try{
-            FEN += "\n";
-            Files.write(Paths.get(FILE_PATH), FEN.getBytes(), StandardOpenOption.APPEND);
+            Date date = new Date(System.currentTimeMillis());
+            FEN = ""+date+"  --  "+FEN;
+            FEN += "\r\n";
+            Files.write(Paths.get(FILE_PATH), FEN.getBytes(), StandardOpenOption.CREATE ,StandardOpenOption.APPEND);
 
         } catch (FileNotFoundException e)
         {

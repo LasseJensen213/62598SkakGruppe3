@@ -5,6 +5,7 @@ import java.util.Collection;
 public class Stack<T> {
 
         private Element top = null;
+        private int size = 0;
 
         public void push(T value)
         {
@@ -12,6 +13,7 @@ public class Stack<T> {
             e.value = value;
             e.next = top;
             top = e;
+            size++;
         }
 
         public void pushAll(Collection<T> collection)
@@ -24,6 +26,7 @@ public class Stack<T> {
                 e.next = top;
                 top = e;
             }
+            size += collection.size();
         }
 
         public T pop()
@@ -32,8 +35,14 @@ public class Stack<T> {
                 return null;
             T value = top.value;
             top = top.next;
+            size--;
             return value;
 
+        }
+
+        public int size()
+        {
+            return size;
         }
 
         public boolean isEmpty()

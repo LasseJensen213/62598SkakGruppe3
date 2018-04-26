@@ -12,12 +12,15 @@ import java.awt.*;
 //Singleton class controlling the game
 public class GameController {
     public IBoard board;
+    public String startFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     static GameController gameController;
+
 
     private GameController(){
         try {
-            board = FEN.decode("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");//Default start board
-
+            board = FEN.decode(startFEN);//Default start board
+            FEN.saveToFile("**********************NEW GAME**********************");
+            FEN.saveToFile(FEN.encode((Board) board));
         } catch (InvalidFENStringException e) {
             e.printStackTrace();//Should not happen
         }
@@ -33,6 +36,7 @@ public class GameController {
     public void makeMove(Move move){
         //TODO: Check if move is legal
         board = new Board((Board) board, move);
+
     }
 
     public void makeMove(String move){//Converts string (eg d2d4) move to normal move

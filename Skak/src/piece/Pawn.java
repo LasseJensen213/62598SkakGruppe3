@@ -36,9 +36,11 @@ public class Pawn extends Piece {
 			if (((int) super.getCoordinates().getY()) == 1) {
 				legalMoves.add(new Point(0, +2));
 			}
+			if(getCoordinates().x != 7)
+				legalMoves.add(new Point(+1, +1));
+			if(getCoordinates().x != 0)
+				legalMoves.add(new Point(-1, +1));
 
-			legalMoves.add(new Point(+1, +1));
-			legalMoves.add(new Point(-1, +1));
 
 		}
 		// If black, the negative direction.
@@ -49,9 +51,10 @@ public class Pawn extends Piece {
 				legalMoves.add(new Point(0, -2));
 
 			}
-
-			legalMoves.add(new Point(-1, -1));
-			legalMoves.add(new Point(+1, -1));
+			if(getCoordinates().x != 0)
+				legalMoves.add(new Point(-1, -1));
+			if(getCoordinates().x != 7)
+				legalMoves.add(new Point(+1, -1));
 		}
 
 		return legalMoves;

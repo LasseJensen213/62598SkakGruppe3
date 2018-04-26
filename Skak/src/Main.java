@@ -1,4 +1,6 @@
 import controller.GameController;
+import data.Board;
+import fen.FEN;
 import interfaces.IPiece;
 import piece.Move;
 
@@ -10,9 +12,15 @@ import java.util.regex.Pattern;
  */
 public class Main {
     public static void main(String[] args) {
+        if(args.length == 1)
+        {
+            GameController.getInstance().startFEN = args[0];
+        }
         Scanner scanner = new Scanner(System.in);
-        //Wait until winboard sends either a move or a command stating the engine is white
 
+        //Wait until winboard sends either a move or a command stating the engine is white
+        FEN.FILE_PATH = System.getProperty("user.dir")+"/FENLOG.txt";
+        String fen = "";
         while(true){
             String line = scanner.nextLine();
             if(line.equals("white")){
@@ -21,20 +29,31 @@ public class Main {
                 Move move = GameController.getInstance().getAIMove();
                 System.out.println("move " + move.algebraicNotation());//Send move command to WinBoard
                 GameController.getInstance().makeMove(move);
+                fen = FEN.encode((Board) GameController.getInstance().board);
+                FEN.saveToFile(fen);
             }else if(Pattern.matches("[a-h]\\d[a-h]\\d",line)){//If string matches a move, eg d2d4
                 GameController.getInstance().makeMove(line);//Make the move WinBoard indicated
+                fen = FEN.encode((Board) GameController.getInstance().board);
+                FEN.saveToFile(fen);
                 break;
             }
         }
         //First move(s) have been made, let AI make move and wait for user move in loop
+
         while(true){
             //Make AI move
             Move move = GameController.getInstance().getAIMove();
             if(move == null)
                 System.out.println("resign");
             else
+            {
                 System.out.println("move " + move.algebraicNotation());//Send move command to WinBoard
+
+            }
+
             GameController.getInstance().makeMove(move);
+            fen = FEN.encode((Board) GameController.getInstance().board);
+            FEN.saveToFile(fen);
 
             //Wait for user move
             String line = scanner.nextLine();
@@ -43,6 +62,8 @@ public class Main {
             }
             //User has made her move
             GameController.getInstance().makeMove(line);
+            fen = FEN.encode((Board) GameController.getInstance().board);
+            FEN.saveToFile(fen);
         }
 
     }
