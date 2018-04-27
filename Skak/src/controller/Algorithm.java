@@ -21,7 +21,7 @@ public class Algorithm {
         AIColor = board.getTurn();
         long currentTime = System.currentTimeMillis();
         long totalTimeTaken = 0;
-        int depth = 2;
+        int depth = 1;
         Move result = null;
         //Her bruges der iterative deeping, hvor vi checker om vi er gået over tid hver iteration
         //Det er stadig muligt at vi bruger mere end 15 sekunder
@@ -32,7 +32,7 @@ public class Algorithm {
             TimedAlgorithm.getINSTANCE().bestMoveSoFar = result;
             long iterationTimePassed = System.currentTimeMillis() - iterationTimeStart;
             totalTimeTaken += iterationTimePassed;
-            System.err.println("Spent " + iterationTimePassed+"ms at depth "+depth + " Total time passed "+totalTimeTaken/1000.0+"s");
+            //System.err.println("Spent " + iterationTimePassed+"ms at depth "+depth + " Total time passed "+totalTimeTaken/1000.0+"s");
             depth++;
         }
         //System.err.println("Spent "+totalTimeTaken/1000.0+"seconds in total. Max Depth achieved "+(depth-1));
@@ -49,7 +49,6 @@ public class Algorithm {
         MoveGenerator mg = new MoveGenerator(board);
         mg.GenerateMoves();
         Stack<Move> moves = new Stack<>();
-
         moves = mg.getFinalMoveStack();
         if(moves.isEmpty())
         {
@@ -64,11 +63,14 @@ public class Algorithm {
             {
                 child =  new Board((Board) board, tmp);
                 result = alphaBeta(child , 1 , alpha , beta , currentDepth-1 , maxDepth);
+
                 if(result > alpha)
                 {
                     alpha = result;
                     move = tmp;
+
                 }
+
 
             }
 
@@ -93,8 +95,6 @@ public class Algorithm {
 
     private static int alphaBeta(IBoard board , int minimaxLevel , int alpha , int beta , int currentDepth , int maxDepth)
     {
-
-
         if(currentDepth == 0)
         {
             return StaticEvaluator.StaticEvaulation(board , maxDepth , minimaxLevel , false);
@@ -102,6 +102,7 @@ public class Algorithm {
         MoveGenerator mg = new MoveGenerator(board);
         mg.GenerateMoves();
         Stack<Move> moves = mg.getFinalMoveStack();
+
         if(moves.isEmpty())
         {
             return StaticEvaluator.StaticEvaulation(board , maxDepth-currentDepth , minimaxLevel , true);

@@ -35,6 +35,7 @@ public class GameController {
 
     public void makeMove(Move move){
         //TODO: Check if move is legal
+
         board = new Board((Board) board, move);
 
     }
@@ -45,7 +46,41 @@ public class GameController {
         int fromY = (int)(move.charAt(1)-'0')-1;
         int toX = (int)(move.charAt(2)-'a');
         int toY = (int)(move.charAt(3)-'0')-1;
-        makeMove(new Move(board.getPiece(new Point(fromX, fromY)),new Point(fromX, fromY),new Point(toX, toY)));
+        IPiece piece = board.getPiece(new Point(fromX, fromY));
+        Move newMove = new Move(piece , new Point(fromX, fromY),new Point(toX, toY));
+        if(piece.getType() == IPiece.Type.King)
+            if((fromX-toX)>1)
+                newMove.setSpecialMove(Move.SpecialMove.LONG_CASTLE);
+            else if((fromX-toX) <-1)
+                newMove.setSpecialMove(Move.SpecialMove.SHORT_CASTLE);
+        else if(piece.getType() == IPiece.Type.Pawn)
+            {
+                if(board.getEnPassant().equals(new Point(toX, toY)))
+                    newMove.setSpecialMove(Move.SpecialMove.EN_PASSANT);
+            }
+        makeMove(newMove);
+    }
+
+    public void makePromotionMove(String move)
+    {
+        int fromX = (int)(move.charAt(0)-'a');
+        int fromY = (int)(move.charAt(1)-'0')-1;
+        int toX = (int)(move.charAt(2)-'a');
+        int toY = (int)(move.charAt(3)-'0')-1;
+        char promotedTo = move.charAt(4);
+        IPiece piece = board.getPiece(new Point(fromX, fromY));
+        Move newMove = new Move(piece , new Point(fromX, fromY),new Point(toX, toY));
+        if(promotedTo == 'q')
+            newMove.setSpecialMove(Move.SpecialMove.PROMOTION_QUEEN);
+        else if(promotedTo=='r')
+            newMove.setSpecialMove(Move.SpecialMove.PROMOTION_ROOK);
+        else if(promotedTo=='n')
+            newMove.setSpecialMove(Move.SpecialMove.PROMOTION_KNIGHT);
+        else
+            newMove.setSpecialMove(Move.SpecialMove.PROMOTION_BISHOP);
+        makeMove(newMove);
+
+
     }
 
     public Move getAIMove(){

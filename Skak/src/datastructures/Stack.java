@@ -9,6 +9,8 @@ public class Stack<T> {
 
         public void push(T value)
         {
+            if(value == null)
+                return;
             Element e = new Element();
             e.value = value;
             e.next = top;

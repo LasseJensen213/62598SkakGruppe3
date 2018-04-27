@@ -52,7 +52,7 @@ public class King extends Piece {
 		legalMoves.add(new Point(-1, 0));
 		legalMoves.add(new Point(0, -1));
 		legalMoves.add(new Point(+1, +1));
-		legalMoves.add(new Point(+1, +1));
+		legalMoves.add(new Point(-1, +1));
 		legalMoves.add(new Point(-1, -1));
 		legalMoves.add(new Point(+1, -1));
 

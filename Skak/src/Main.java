@@ -33,12 +33,40 @@ public class Main {
                 //Engine is white
                 GameController.getInstance().board.setTurn(IPiece.Color.WHITE);
                 Move move = GameController.getInstance().getAIMove();
-                System.out.println("move " + move.algebraicNotation());//Send move command to WinBoard
+                if(move == null)
+                    System.out.println("resign");
+                else if(move.getSpecialMove()== Move.SpecialMove.PROMOTION_QUEEN)
+                {
+                    System.out.println("move " + move.algebraicNotation()+"q");//Send move command to WinBoard
+                }
+                else if(move.getSpecialMove()== Move.SpecialMove.PROMOTION_KNIGHT)
+                {
+                    System.out.println("move " + move.algebraicNotation()+"n");//Send move command to WinBoard
+                }
+                else if(move.getSpecialMove() == Move.SpecialMove.PROMOTION_BISHOP)
+                {
+                    System.out.println("move " + move.algebraicNotation()+"b");//Send move command to WinBoard
+                }
+                else if(move.getSpecialMove() == Move.SpecialMove.PROMOTION_ROOK)
+                {
+                    System.out.println("move " + move.algebraicNotation()+"r");//Send move command to WinBoard
+                }
+                else
+                {
+                    System.out.println("move " + move.algebraicNotation());//Send move command to WinBoard
+                }
                 GameController.getInstance().makeMove(move);
                 fen = FEN.encode((Board) GameController.getInstance().board);
                 FEN.saveToFile(fen);
             }else if(Pattern.matches("[a-h]\\d[a-h]\\d",line)){//If string matches a move, eg d2d4
                 GameController.getInstance().makeMove(line);//Make the move WinBoard indicated
+                fen = FEN.encode((Board) GameController.getInstance().board);
+                FEN.saveToFile(fen);
+                break;
+            }
+            else if(Pattern.matches("[a-h]\\d[a-h]\\d[qrnb]]",line))
+            {
+                GameController.getInstance().makePromotionMove(line);//Make the move WinBoard indicated
                 fen = FEN.encode((Board) GameController.getInstance().board);
                 FEN.saveToFile(fen);
                 break;

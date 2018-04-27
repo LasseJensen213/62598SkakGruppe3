@@ -19,12 +19,11 @@ public class StaticEvaluator {
         {
             if(board.isChecked())//Checkmate!
             {
-                if(currentDepth == 1)
-                    System.out.println(board);
+
                 if(minimaxLevel == 0)
-                    return -2000000+currentDepth*100;
+                    return -200000+currentDepth*100;
                 else
-                    return 2000000-currentDepth*100;
+                    return 200000-currentDepth*100;
             }
             else//Stalemate
             {

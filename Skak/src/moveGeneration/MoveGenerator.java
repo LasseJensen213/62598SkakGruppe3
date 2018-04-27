@@ -51,7 +51,7 @@ public class MoveGenerator {
 	/**
 	 * generates moves for the individual piece.
 	 * 
-	 * @param pieces
+	 *
 	 *            Arraylist of moves
 	 */
 	public void GenerateMoves() {
@@ -145,50 +145,78 @@ public class MoveGenerator {
 								}
 								break;
 							case King:
-								if (p.getX() > 1) { // Is it trying to castle.
+								if (Math.abs(p.getX()) > 1) { // Is it trying to castle.
+									if(boardState.isChecked()) // King is checked on his current position
+										continue;
 									// Check path to rook for short castle.
 									Point fieldToCheck = new Point();
 									// We trying to long castle.
 									if (newMove.getStartCoor().getX() > newMove.getEndCoor().getX()) {
-										for (int x = 6; x <= 8; x++) {
+										boolean canCastle = boardState.getTurn() == Color.BLACK ? boardState.isBlackLongCastle() : boardState.isWhiteLongCastle();
+										if(!canCastle)
+											continue;
+										Move castleMove = new Move(piece , piece.getCoordinates() , new Point(newCoords.x+1 , newCoords.y));
+										if(boardState.isKingInCheckAfterMove(piece.getColor() , castleMove))
+											continue;
+										boolean spacesFree = true;
+										for (int x = 5; x <= 6; x++) {
 											fieldToCheck.setLocation(x, newMove.getStartCoor().getY());
 											if (boardState.getPiece(fieldToCheck) != null) {
 												// TODO is field threatened by enemy piece Then break
+												/*
 												if (boardState.getPiece(fieldToCheck).getType().equals(Type.Rook)) {
 													if (!((Rook) boardState.getPiece(fieldToCheck)).isUnmoved()) {
 														break;
 													}
 												} else {
 													break;
-												}
+												}*/
+												spacesFree = false;
+												break;
 											}
-
+										}
+										if(spacesFree)
+										{
 											((King) newMove.getMovingPiece()).setUnmoved(false);
 											newMove.setSpecial(true);
+											newMove.setSpecialMove(Move.SpecialMove.LONG_CASTLE);
+											newMove.addAdditionalPoints(Values.KINGCASTLE);
 											betterThanAvarage.add(newMove);
 										}
 									}
 									// We trying to short castle.
 									else {
-										for (int x = 2; x < 5; x++) {
+										boolean canCastle = boardState.getTurn() == Color.BLACK ? boardState.isBlackShortCastle() : boardState.isWhiteShortCastle();
+										if(!canCastle)
+											continue;
+										Move castleMove = new Move(piece , piece.getCoordinates() , new Point(newCoords.x-1 , newCoords.y));
+										if(boardState.isKingInCheckAfterMove(piece.getColor() , castleMove))
+											continue;
+										boolean spacesFree = true;
+										for (int x = 1; x < 4; x++) {
 											fieldToCheck.setLocation(x, newMove.getStartCoor().getY());
 											if (boardState.getPiece(fieldToCheck) != null) {
 												// TODO is field threatened by enemy piece Then break
-
+												/*
 												if (boardState.getPiece(fieldToCheck).getType().equals(Type.Rook)) {
 													if (!((Rook) boardState.getPiece(fieldToCheck)).isUnmoved()) {
 														break;
 													}
 												} else {
 													break;
-												}
+												}*/
+												spacesFree = false;
+												break;
 											}
-
+										}
+										if(spacesFree)
+										{
 											((King) newMove.getMovingPiece()).setUnmoved(false);
 											newMove.setSpecial(true);
+											newMove.setSpecialMove(Move.SpecialMove.SHORT_CASTLE);
 											betterThanAvarage.add(newMove);
-
 										}
+
 									}
 
 								} else {
@@ -215,7 +243,10 @@ public class MoveGenerator {
 								break;
 							}
 							case Queen:
-								officerMoves.add(newMove);
+								if(newMove.isOffensive())
+									offensiveMoves.add(newMove);
+								else
+									officerMoves.add(newMove);
 								break;
 							case Rook:
 								((Rook) newMove.getMovingPiece()).setUnmoved(false);

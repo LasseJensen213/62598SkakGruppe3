@@ -83,6 +83,7 @@ public class Board implements IBoard {
 						break;
 					case Rook:
 						this.chessBoard[i][j] = (Rook) new Rook(oldBoard.chessBoard[i][j]);
+
 						break;
 					default:
 						break;
@@ -96,6 +97,7 @@ public class Board implements IBoard {
 		}
 		
 		this.additionalPoints += newMove.getAdditionalPoints();
+
 		if (oldBoard.getTurn().equals(Color.WHITE)) {
 			this.turn = Color.BLACK;
 			this.fullmoveNumber = oldBoard.fullmoveNumber;
@@ -103,14 +105,50 @@ public class Board implements IBoard {
 			this.turn = Color.WHITE;
 			this.fullmoveNumber = oldBoard.fullmoveNumber+1;
 		}
-		if(newMove.getIsCheckMove())
+		this.isChecked = newMove.getIsCheckMove();
+		if(this.isChecked)
 		{
-			this.isChecked = newMove.getIsCheckMove();
 			if(this.turn == Color.WHITE)
 				this.whiteKing.setCheck(true);
 			else
 				this.blacKing.setCheck(true);
 		}
+
+		IPiece piece = this.chessBoard[newMove.getEndCoor().x][newMove.getEndCoor().y];
+		if(piece != null && piece.getType() == Type.Rook)
+		{
+			if(this.turn == Color.WHITE)
+			{
+				if(this.whiteLongCastle)
+				{
+					if(piece.getCoordinates().x == 0 && piece.getCoordinates().y == 0)
+						this.whiteLongCastle = false;
+				}
+				if(this.whiteShortCastle)
+				{
+					if(piece.getCoordinates().x == 7 && piece.getCoordinates().y == 0)
+						this.whiteShortCastle = false;
+				}
+			}
+			else{
+				if(this.blackLongCastle)
+				{
+					if(piece.getCoordinates().x == 0 && piece.getCoordinates().y==7)
+						this.blackLongCastle = false;
+				}
+				if (this.blackShortCastle)
+				{
+					if(piece.getCoordinates().x == 7 && piece.getCoordinates().y == 7)
+						this.blackShortCastle = false;
+				}
+			}
+		}
+
+
+
+
+
+
 		switch (newMove.getMovingPiece().getType()) {
 		case Bishop:
 			this.getPiece(newMove.getStartCoor()).setCoordinates(newMove.getEndCoor());
@@ -125,15 +163,40 @@ public class Board implements IBoard {
 		case King:
 			this.getPiece(newMove.getStartCoor()).setCoordinates(newMove.getEndCoor());
 			this.setPiece(newMove.getEndCoor(), this.getPiece(newMove.getStartCoor()));
+			((King)newMove.getMovingPiece()).setUnmoved(false);
 			setPieceNull(newMove.getStartCoor());
 			switch (newMove.getMovingPiece().getColor()) {
 			case BLACK:
-				blackLongCastle = false;
-				blackShortCastle = false;
+				this.blackLongCastle = false;
+				this.blackShortCastle = false;
+				if(newMove.getSpecialMove() == Move.SpecialMove.LONG_CASTLE)
+				{
+					IPiece rook = this.chessBoard[0][7];
+					this.chessBoard[0][7] = null;
+					this.chessBoard[3][7] = rook;
+				}
+				else if(newMove.getSpecialMove() == Move.SpecialMove.SHORT_CASTLE)
+				{
+					IPiece rook = this.chessBoard[7][7];
+					this.chessBoard[7][7] = null;
+					this.chessBoard[5][7] = rook;
+				}
 				break;
 			case WHITE:
-				whiteLongCastle = false;
-				whiteShortCastle = false;
+				this.whiteLongCastle = false;
+				this.whiteShortCastle = false;
+				if(newMove.getSpecialMove() == Move.SpecialMove.LONG_CASTLE)
+				{
+					IPiece rook = this.chessBoard[0][0];
+					this.chessBoard[0][0] = null;
+					this.chessBoard[3][0] = rook;
+				}
+				else if(newMove.getSpecialMove() == Move.SpecialMove.SHORT_CASTLE)
+				{
+					IPiece rook = this.chessBoard[7][0];
+					this.chessBoard[7][0] = null;
+					this.chessBoard[5][0] = rook;
+				}
 				break;
 			default:
 				break;
@@ -207,10 +270,9 @@ public class Board implements IBoard {
 
 			break;
 		case Rook:
-
 			if (whiteLongCastle) {
 				Point a1Rook = new Point();
-				a1Rook.setLocation(1, 1);
+				a1Rook.setLocation(0, 0);
 				if (newMove.getStartCoor().equals(a1Rook)) {
 					this.whiteLongCastle = false;
 				}
@@ -218,7 +280,7 @@ public class Board implements IBoard {
 			}
 			if (whiteShortCastle) {
 				Point h1Rook = new Point();
-				h1Rook.setLocation(8, 1);
+				h1Rook.setLocation(7, 0);
 				if (newMove.getStartCoor().equals(h1Rook)) {
 					this.whiteShortCastle = false;
 				}
@@ -226,7 +288,7 @@ public class Board implements IBoard {
 			}
 			if (blackLongCastle) {
 				Point a8Rook = new Point();
-				a8Rook.setLocation(1, 8);
+				a8Rook.setLocation(0, 7);
 				if (newMove.getStartCoor().equals(a8Rook)) {
 					this.blackLongCastle = false;
 				}
@@ -234,7 +296,7 @@ public class Board implements IBoard {
 			}
 			if (blackShortCastle) {
 				Point h8Rook = new Point();
-				h8Rook.setLocation(8, 8);
+				h8Rook.setLocation(7, 7);
 				if (newMove.getStartCoor().equals(h8Rook)) {
 					this.blackShortCastle = false;
 				}
@@ -253,6 +315,7 @@ public class Board implements IBoard {
 			break;
 
 		}
+
 		//System.out.println(this.toString());
 
 	}

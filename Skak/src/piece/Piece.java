@@ -54,7 +54,7 @@ public abstract class Piece extends Object implements IPiece {
 
 	@Override
 	public void setCoordinates(Point coordinates) {
-		this.coordinates = coordinates;
+		this.coordinates.x = coordinates.x; this.coordinates.y = coordinates.y;
 	}
 
 }
