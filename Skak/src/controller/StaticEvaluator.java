@@ -11,11 +11,39 @@ public class StaticEvaluator {
     private static int[] pawRow = {0 , 0 , -1 , 0 , 2 , 14 , 30 , 0};
     private static int[] pawLin = {-2 , 0 , 3 , 4 , 5 , 1 , -2 , -2};
 
-    public static int  StaticEvaulation(IBoard board , int currentDepth , int minimaxLevel)
+    public static int  StaticEvaulation(IBoard board , int currentDepth , int minimaxLevel, boolean noMovesLeft)
     {
+        int blackValue = 0 , whiteValue = 0, result = 0;
+
+        if(noMovesLeft)
+        {
+            if(board.isChecked())//Checkmate!
+            {
+                if(currentDepth == 1)
+                    System.out.println(board);
+                if(minimaxLevel == 0)
+                    return -2000000+currentDepth*100;
+                else
+                    return 2000000-currentDepth*100;
+            }
+            else//Stalemate
+            {
+                if(minimaxLevel==0)
+                {
+                    if(currentDepth==0)
+                        TimedAlgorithm.getINSTANCE().stalemate = true;
+                    return -100000+currentDepth;
+                }
+                else
+                {
+                    return 100000-currentDepth;
+                }
+
+            }
+        }
         IPiece piece = null;
         IPiece[][] chessBoard = board.getChessBoard();
-        int blackValue = 0 , whiteValue = 0, result = 0;
+
         for(int y = 0 ; y<8 ; y++)
         {
             for(int x = 0 ; x<8 ; x++)
@@ -34,7 +62,7 @@ public class StaticEvaluator {
                                 break;
                             case King:
                                 if(((King) piece).isCheck())
-                                    whiteValue += 10000 - 50*currentDepth;
+                                    whiteValue += 10000 - 100*(currentDepth/2);
                                 else
                                     whiteValue += 10000;
                                 break;
@@ -61,7 +89,7 @@ public class StaticEvaluator {
                                 break;
                             case King:
                                 if(((King) piece).isCheck())
-                                    blackValue += 10000 - 50*currentDepth;
+                                    blackValue += 10000 - 100*(currentDepth/2);
                                 else
                                     blackValue += 10000;
                                 break;

@@ -47,12 +47,14 @@ public class Board implements IBoard {
 		this.blackLongCastle = oldBoard.isBlackLongCastle();
 		this.blackShortCastle = oldBoard.isBlackShortCastle();
 		this.createdByMove = newMove;
+
 		this.chessBoard = new IPiece[8][8];
 		if(newMove.isOffensive() || newMove.getMovingPiece().getType() == Type.Pawn)
 			this.halfMoveClock=0;
 		else
 			this.halfMoveClock=oldBoard.halfMoveClock+1;
-		this.isChecked = newMove.getIsCheckMove();
+
+
 		//this.chessBoard = tempBoard;
 //
 		for(int i = 0;i<8;i++) {
@@ -64,6 +66,7 @@ public class Board implements IBoard {
 						break;
 					case King:
 						this.chessBoard[i][j] = (King) new King(oldBoard.chessBoard[i][j]);
+
 						if(chessBoard[i][j].getColor() == Color.WHITE)
 							this.whiteKing = (King)chessBoard[i][j];
 						else
@@ -100,7 +103,14 @@ public class Board implements IBoard {
 			this.turn = Color.WHITE;
 			this.fullmoveNumber = oldBoard.fullmoveNumber+1;
 		}
-
+		if(newMove.getIsCheckMove())
+		{
+			this.isChecked = newMove.getIsCheckMove();
+			if(this.turn == Color.WHITE)
+				this.whiteKing.setCheck(true);
+			else
+				this.blacKing.setCheck(true);
+		}
 		switch (newMove.getMovingPiece().getType()) {
 		case Bishop:
 			this.getPiece(newMove.getStartCoor()).setCoordinates(newMove.getEndCoor());
@@ -108,7 +118,7 @@ public class Board implements IBoard {
 			setPieceNull(newMove.getStartCoor());
 
 			if (newMove.isSpecial()) {
-				System.out.println("Pawn promo to bishop");
+				//System.out.println("Pawn promo to bishop");
 			}
 			break;
 
@@ -138,7 +148,7 @@ public class Board implements IBoard {
 			//setPieceNull(newMove.getStartCoor());
 
 			if (newMove.isSpecial()) {
-				System.out.println("Pawn promo to knight");
+				//System.out.println("Pawn promo to knight");
 			}
 			break;
 
@@ -192,7 +202,7 @@ public class Board implements IBoard {
 			this.setPiece(newMove.getEndCoor(), this.getPiece(newMove.getStartCoor()));
 			setPieceNull(newMove.getStartCoor());
 			if (newMove.isSpecial()) {
-				System.out.println("Pawn promo to queen");
+				//System.out.println("Pawn promo to queen");
 			}
 
 			break;
@@ -236,7 +246,7 @@ public class Board implements IBoard {
 			setPieceNull(newMove.getStartCoor());
 
 			if (newMove.isSpecial()) {
-				System.out.println("Pawn promo to rook");
+				//System.out.println("Pawn promo to rook");
 			}
 			break;
 		default:
@@ -264,11 +274,11 @@ public class Board implements IBoard {
 				if (temp == null)
 					continue;
 				if (temp.getColor().equals(this.turn)) {
-					if (temp.getType() == Type.King) {
-						king = temp;
-					} else {
+					//if (temp.getType() == Type.King) {
+					//	king = temp;
+					//} else {
 						pieces.add(temp);
-					}
+					//}
 				}
 			}
 		}
@@ -427,74 +437,17 @@ public class Board implements IBoard {
 
 	@Override
 	public String toString() {
-		String toPrint = "";
+		String toPrint = "\n-----------------\n";
 		for (int i = 7; i >= 0; i--) {
 			for (int j = 0; j <= 7; j++) {
 				if (chessBoard[j][i] == null) {
-					toPrint += " ";
+					toPrint += "| ";
 				} else {
-					switch (chessBoard[j][i].getColor()) {
-					case BLACK:
-						switch (chessBoard[j][i].getType()) {
-						case Bishop:
-							toPrint += "b";
-							break;
-						case King:
-							toPrint += "k";
-							break;
-						case Knight:
-							toPrint += "s";
-							break;
-						case Pawn:
-							toPrint += "p";
-							break;
-						case Queen:
-							toPrint += "q";
-							break;
-						case Rook:
-							toPrint += "r";
-							break;
-						default:
-							toPrint += " ";
-							break;
-
-						}
-						break;
-					case WHITE:
-						switch (chessBoard[j][i].getType()) {
-						case Bishop:
-							toPrint += "B";
-							break;
-						case King:
-							toPrint += "K";
-							break;
-						case Knight:
-							toPrint += "S";
-							break;
-						case Pawn:
-							toPrint += "P";
-							break;
-						case Queen:
-							toPrint += "Q";
-							break;
-						case Rook:
-							toPrint += "R";
-							break;
-						default:
-							toPrint += " ";
-							break;
-
-						}
-						break;
-					default:
-						break;
-
-					}
-
+					toPrint += "|"+chessBoard[j][i];
 				}
 
 			}
-			toPrint += "\n";
+			toPrint += "|\n-----------------\n";
 		}
 		return "Board: \n" + toPrint;
 	}
@@ -551,7 +504,6 @@ public class Board implements IBoard {
 			}
 			else
 			{
-
 				kingX = currentKing.getCoordinates().x;
 				kingY = currentKing.getCoordinates().y;
 			}
@@ -576,16 +528,14 @@ public class Board implements IBoard {
 			}
 			else
 			{
-				if(currentKing == null)
-					System.out.println("what");
 				kingX = currentKing.getCoordinates().x;
 				kingY = currentKing.getCoordinates().y;
 			}
 		}
 
-		int leftFields = kingX; 									 //Distance to left border
+		int leftFields = kingX; 									 				 //Distance to left border
 		int rightFields = 7 - leftFields;          									 //Distance to right border
-		int bottomFields = kingY;									 //Distance to bottom border
+		int bottomFields = kingY;									 				 //Distance to bottom border
 		int topFields = 7-bottomFields;												 //Distance to top border
 		int leftLowerDiag = leftFields < bottomFields ? leftFields : bottomFields;   //How many lower left diagonal fields before hitting either left or bottom border
 		int leftUpperDiag = leftFields < topFields ? leftFields : topFields;		 //How many upper left diagonal fields before hitting either left or top border
@@ -684,11 +634,11 @@ public class Board implements IBoard {
 			}
 		}
 		//Need to check for enemy pawns now
-		if(currentKing.getColor() == Color.WHITE && currentKing.getCoordinates().y!=7)
+		if(currentKing.getColor() == Color.WHITE && kingY!=7)
 		{
 			if(kingX != 0)
 			{
-				piece = chessBoard[currentKing.getCoordinates().x-1][currentKing.getCoordinates().y+1];
+				piece = chessBoard[kingX-1][kingY+1];
 				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Pawn)
 				{
 					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
@@ -698,7 +648,7 @@ public class Board implements IBoard {
 			}
 			if(kingX != 7)
 			{
-				piece = chessBoard[currentKing.getCoordinates().x+1][currentKing.getCoordinates().y+1];
+				piece = chessBoard[kingX+1][kingY+1];
 				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Pawn)
 				{
 					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
@@ -707,12 +657,12 @@ public class Board implements IBoard {
 				}
 			}
 		}
-		else if(currentKing.getColor() == Color.BLACK && currentKing.getCoordinates().y != 0)
+		else if(currentKing.getColor() == Color.BLACK && kingY != 0)
 		{
 
 			if(kingX != 0)
 			{
-				piece = chessBoard[currentKing.getCoordinates().x-1][currentKing.getCoordinates().y-1];
+				piece = chessBoard[kingX-1][kingY-1];
 				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Pawn)
 				{
 					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
@@ -722,7 +672,7 @@ public class Board implements IBoard {
 			}
 			if(kingX != 7)
 			{
-				piece = chessBoard[currentKing.getCoordinates().x+1][currentKing.getCoordinates().y-1];
+				piece = chessBoard[kingX+1][kingY-1];
 				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Pawn)
 				{
 					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
@@ -735,7 +685,7 @@ public class Board implements IBoard {
 		//Checking diagonals now for bishops / Queens
 		x = kingX;
 		y = kingY;
-		for(i = 1 ; i<leftLowerDiag ; i++)
+		for(i = 1 ; i<=leftLowerDiag ; i++)
 		{
 			x--;
 			y--;
@@ -758,7 +708,7 @@ public class Board implements IBoard {
 		}
 		x = kingX;
 		y = kingY;
-		for(i = 1 ; i<leftUpperDiag ; i++)
+		for(i = 1 ; i<=leftUpperDiag ; i++)
 		{
 			x--;
 			y++;
@@ -781,7 +731,7 @@ public class Board implements IBoard {
 		}
 		x = kingX;
 		y = kingY;
-		for(i = 1 ; i<rightLowerDiag ; i++)
+		for(i = 1 ; i<=rightLowerDiag ; i++)
 		{
 			x++;
 			y--;
@@ -804,7 +754,7 @@ public class Board implements IBoard {
 		}
 		x = kingX;
 		y = kingY;
-		for(i = 1 ; i<rightUpperDiag ; i++)
+		for(i = 1 ; i<=rightUpperDiag ; i++)
 		{
 			x++;
 			y++;
@@ -826,8 +776,7 @@ public class Board implements IBoard {
 			}
 		}
 		//Now we check if a knight is in range
-		ArrayList<Point> validKnightMoves = new ArrayList<>();
-		int hexPos = kingX + kingY<<4 , newPos;
+		int hexPos = kingX + (kingY<<4) , newPos;
 		for(i = 0 ; i<8 ; i++)
 		{
 			newPos = knightMoves[i] + hexPos;

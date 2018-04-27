@@ -12,15 +12,21 @@ import java.util.regex.Pattern;
  */
 public class Main {
     public static void main(String[] args) {
-        if(args.length == 1)
+        String fen = "";
+        if(args.length >0)
         {
-            GameController.getInstance().startFEN = args[0];
+            for(int i = 0 ; i<args.length; i++)
+            {
+                fen += args[i]+" ";
+            }
+            fen = fen.substring(0 , fen.length()-1);
+            GameController.startFEN = fen;
+            System.out.println("feature setboard=1");
+            System.out.println("setboard "+fen);
         }
         Scanner scanner = new Scanner(System.in);
-
         //Wait until winboard sends either a move or a command stating the engine is white
         FEN.FILE_PATH = System.getProperty("user.dir")+"/FENLOG.txt";
-        String fen = "";
         while(true){
             String line = scanner.nextLine();
             if(line.equals("white")){

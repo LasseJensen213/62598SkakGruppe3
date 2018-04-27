@@ -97,16 +97,14 @@ public class Algorithm {
 
         if(currentDepth == 0)
         {
-            return StaticEvaluator.StaticEvaulation(board , maxDepth , minimaxLevel);
+            return StaticEvaluator.StaticEvaulation(board , maxDepth , minimaxLevel , false);
         }
-        //TODO Skal måske også checke om man er skakmat
-
         MoveGenerator mg = new MoveGenerator(board);
         mg.GenerateMoves();
         Stack<Move> moves = mg.getFinalMoveStack();
         if(moves.isEmpty())
         {
-            return StaticEvaluator.StaticEvaulation(board , maxDepth-currentDepth , minimaxLevel);
+            return StaticEvaluator.StaticEvaulation(board , maxDepth-currentDepth , minimaxLevel , true);
         }
         IBoard child = null;
         Move move = null;

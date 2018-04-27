@@ -82,6 +82,7 @@ public class MoveGenerator {
 
 			i++;
 			// Reset directionsmap
+			directions.clear();
 			directions.put(rightPoint, true); // Right
 			directions.put(leftPoint, true); // Left
 			directions.put(upPoint, true); // Up

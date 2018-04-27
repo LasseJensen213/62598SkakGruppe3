@@ -28,6 +28,7 @@ public class King extends Piece {
 				new Point((int) iPiece.getCoordinates().getX(), (int) iPiece.getCoordinates().getY()));
 		legalMoves = new ArrayList<>();
 		inCheckMoves = new ArrayList<>();
+		this.unmoved = ((King)iPiece).unmoved;
 	}
 
 	public boolean isCheck() {
