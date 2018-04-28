@@ -28,7 +28,6 @@ public class Algorithm {
         while(running)
         {
             long iterationTimeStart = System.currentTimeMillis();
-            TimedAlgorithm.getINSTANCE().bestMoveAlpha = Integer.MIN_VALUE;
             result = alphaBetaFirstPly(board , result ,0 , Integer.MIN_VALUE , Integer.MAX_VALUE , depth , depth);
             TimedAlgorithm.getINSTANCE().bestMoveSoFar = result;
             long iterationTimePassed = System.currentTimeMillis() - iterationTimeStart;
@@ -75,11 +74,6 @@ public class Algorithm {
                 {
                     alpha = result;
                     move = tmp;
-                    if(alpha > TimedAlgorithm.getINSTANCE().bestMoveAlpha)
-                    {
-                        TimedAlgorithm.getINSTANCE().bestMoveAlpha = alpha;
-                        TimedAlgorithm.getINSTANCE().bestMoveSoFar = tmp;
-                    }
 
                 }
 

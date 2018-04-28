@@ -8,7 +8,6 @@ public class TimedAlgorithm {
     private static TimedAlgorithm INSTANCE = new TimedAlgorithm();
     private long maxWaitTime = 15000;
     public Move bestMoveSoFar = null;
-    public int bestMoveAlpha = Integer.MIN_VALUE;
     public boolean stalemate = false;
     public Thread timerThread = null; //Does all the work in the algorithm - and constantly updates best move
 
