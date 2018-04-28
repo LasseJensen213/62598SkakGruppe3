@@ -7,7 +7,6 @@ import interfaces.IBoard;
 import interfaces.IPiece;
 import interfaces.IPiece.Color;
 import interfaces.IPiece.Type;
-import javafx.scene.effect.Light;
 import piece.Bishop;
 import piece.King;
 import piece.Knight;
@@ -30,7 +29,7 @@ public class Board implements IBoard {
 	private int fullmoveNumber = 1;
 	private int halfMoveClock = 0;
 	private Color turn = Color.WHITE;
-	private King blacKing;
+	private King blackKing;
 	private King whiteKing;
 	private boolean isChecked = false;
 	private static int[] knightMoves = {0x21 , 0x1F , 0x12 , 0x0E , -0x21 , -0x1F , -0x12 , -0x0E}; // Mainly using this for checking if king is in chech
@@ -70,7 +69,7 @@ public class Board implements IBoard {
 						if(chessBoard[i][j].getColor() == Color.WHITE)
 							this.whiteKing = (King)chessBoard[i][j];
 						else
-							this.blacKing = (King)chessBoard[i][j];
+							this.blackKing = (King)chessBoard[i][j];
 						break;
 					case Knight:
 						this.chessBoard[i][j] = (Knight) new Knight(oldBoard.chessBoard[i][j]);
@@ -111,7 +110,7 @@ public class Board implements IBoard {
 			if(this.turn == Color.WHITE)
 				this.whiteKing.setCheck(true);
 			else
-				this.blacKing.setCheck(true);
+				this.blackKing.setCheck(true);
 		}
 
 		IPiece piece = this.chessBoard[newMove.getEndCoor().x][newMove.getEndCoor().y];
@@ -224,11 +223,11 @@ public class Board implements IBoard {
 				Point enPassantPoint = new Point();
 				switch (newMove.getMovingPiece().getColor()) {
 				case BLACK:
-					enPassantPoint.setLocation(newMove.getStartCoor().getX(), 6);
+					enPassantPoint.setLocation(newMove.getStartCoor().getX(), 5);
 					this.setEnPassant(enPassantPoint);
 					break;
 				case WHITE:
-					enPassantPoint.setLocation(newMove.getStartCoor().getX(), 3);
+					enPassantPoint.setLocation(newMove.getStartCoor().getX(), 2);
 					this.setEnPassant(enPassantPoint);
 					break;
 				default:
@@ -549,33 +548,16 @@ public class Board implements IBoard {
 		int kingX , kingY;
 		if(color == Color.WHITE)
 		{
-			currentKing = whiteKing;
-			adversaryKing = blacKing;
-			if(move.getMovingPiece().getType() == Type.King) //We need to check if we are moving the king, that we aren't moving into the space of the other king
-			{
-				kingX = move.getEndCoor().x;
-				kingY = move.getEndCoor().y;
-				int dx = Math.abs(kingX - adversaryKing.getCoordinates().x);
-				int dy = Math.abs(kingY - adversaryKing.getCoordinates().y);
-				if((dx == 0 || dx == 1) && (dy == 0 || dy==1))
-				{
-					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
-					chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
-					return true;
-				}
-
-			}
-			else
-			{
-				kingX = currentKing.getCoordinates().x;
-				kingY = currentKing.getCoordinates().y;
-			}
-
+			currentKing = this.whiteKing;
+			adversaryKing = this.blackKing;
 		}
 		else
 		{
-			currentKing = blacKing;
-			adversaryKing = whiteKing;
+			currentKing = this.blackKing;
+			adversaryKing = this.whiteKing;
+		}
+		if(color == this.turn)
+		{
 			if(move.getMovingPiece().getType() == Type.King)
 			{
 				kingX = move.getEndCoor().x;
@@ -594,6 +576,11 @@ public class Board implements IBoard {
 				kingX = currentKing.getCoordinates().x;
 				kingY = currentKing.getCoordinates().y;
 			}
+		}
+		else
+		{
+			kingX = currentKing.getCoordinates().x;
+			kingY = currentKing.getCoordinates().y;
 		}
 
 		int leftFields = kingX; 									 				 //Distance to left border
@@ -865,7 +852,7 @@ public class Board implements IBoard {
 
 	@Override
 	public void setBlackKing(King king) {
-		this.blacKing = king;
+		this.blackKing = king;
 	}
 
 	@Override

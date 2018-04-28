@@ -184,7 +184,7 @@ public class FEN {
             else
             {
                 int column = (int)(enPassant.charAt(0)-'a');
-                int row = (int)(enPassant.charAt(1)-'0');
+                int row = (int)(enPassant.charAt(1)-'0')-1;
                 result += "En passant square(Column,Row) :(" + column+","+row+") or "+enPassant;
                 board.setEnPassant(new Point(column , row));
             }
@@ -299,7 +299,7 @@ public class FEN {
         if(board.getEnPassant() != null)
         {
             char col = (char)(board.getEnPassant().x+'a');
-            enPassant = ""+col+board.getEnPassant().y;
+            enPassant = ""+col+(board.getEnPassant().y+1);
         }
         else
         {

@@ -3,6 +3,7 @@ package controller;
 import interfaces.IBoard;
 import interfaces.IPiece;
 import piece.King;
+import piece.Move;
 
 public class StaticEvaluator {
 
@@ -42,6 +43,11 @@ public class StaticEvaluator {
         }
         IPiece piece = null;
         IPiece[][] chessBoard = board.getChessBoard();
+        if(board.getMove().getSpecialMove() == Move.SpecialMove.SHORT_CASTLE || board.getMove().getSpecialMove() == Move.SpecialMove.LONG_CASTLE)
+            if(board.getMove().getMovingPiece().getColor() == IPiece.Color.WHITE)
+                whiteValue += 16;
+            else
+                blackValue += 16;
 
         for(int y = 0 ; y<8 ; y++)
         {
@@ -59,12 +65,13 @@ public class StaticEvaluator {
                             case Bishop:
                                 whiteValue += 300 + 2*coveredFieldsBishop(chessBoard , x ,y , IPiece.Color.WHITE);
                                 break;
+                                /*
                             case King:
                                 if(((King) piece).isCheck())
-                                    whiteValue += 10000 - 100*(currentDepth/2);
+                                    whiteValue += 10000 - 100*((currentDepth+1)/2);
                                 else
                                     whiteValue += 10000;
-                                break;
+                                break;*/
                             case Queen:
                                 whiteValue += 900 + coveredFieldsQueen(chessBoard , x , y , IPiece.Color.WHITE);
                                 break;
@@ -86,17 +93,17 @@ public class StaticEvaluator {
                             case Bishop:
                                 blackValue += 300 + 2*coveredFieldsBishop(chessBoard , x ,y , IPiece.Color.BLACK);
                                 break;
-                            case King:
+                           /* case King:
                                 if(((King) piece).isCheck())
-                                    blackValue += 10000 - 100*(currentDepth/2);
+                                    blackValue += 10000 - 100*((currentDepth+1)/2);
                                 else
                                     blackValue += 10000;
-                                break;
+                                break;*/
                             case Queen:
                                 blackValue += 900 + coveredFieldsQueen(chessBoard , x , y , IPiece.Color.BLACK);
                                 break;
                             case Pawn:
-                                blackValue += 100 + pawRow[y]+ (pawLin[7-x]*y)/2;
+                                blackValue += 100 + pawRow[y]+ (pawLin[x]*y)/2;
                                 break;
                             case Rook:
                                 blackValue += 500 + 1.5*coveredFieldsRook(chessBoard , x , y , IPiece.Color.BLACK);

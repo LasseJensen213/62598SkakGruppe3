@@ -28,13 +28,15 @@ public class Algorithm {
         while(running)
         {
             long iterationTimeStart = System.currentTimeMillis();
+            TimedAlgorithm.getINSTANCE().bestMoveAlpha = Integer.MIN_VALUE;
             result = alphaBetaFirstPly(board , result ,0 , Integer.MIN_VALUE , Integer.MAX_VALUE , depth , depth);
             TimedAlgorithm.getINSTANCE().bestMoveSoFar = result;
             long iterationTimePassed = System.currentTimeMillis() - iterationTimeStart;
             totalTimeTaken += iterationTimePassed;
-            //System.err.println("Spent " + iterationTimePassed+"ms at depth "+depth + " Total time passed "+totalTimeTaken/1000.0+"s");
             depth++;
+            //System.err.println("Spent " + iterationTimePassed+"ms at ply "+depth + " Total time passed "+totalTimeTaken/1000.0+"s");
         }
+
         //System.err.println("Spent "+totalTimeTaken/1000.0+"seconds in total. Max Depth achieved "+(depth-1));
 
         //return result;
@@ -54,6 +56,11 @@ public class Algorithm {
         {
             return null;
         }
+        if(moves.size() == 1)
+        {
+            TimedAlgorithm.getINSTANCE().bestMoveSoFar = moves.pop();
+            TimedAlgorithm.getINSTANCE().timerThread.interrupt();
+        }
         if(lastBestMove != null)
             moves.push(lastBestMove);
         if(minimaxLevel == 0) //Maximizer level
@@ -68,6 +75,11 @@ public class Algorithm {
                 {
                     alpha = result;
                     move = tmp;
+                    if(alpha > TimedAlgorithm.getINSTANCE().bestMoveAlpha)
+                    {
+                        TimedAlgorithm.getINSTANCE().bestMoveAlpha = alpha;
+                        TimedAlgorithm.getINSTANCE().bestMoveSoFar = tmp;
+                    }
 
                 }
 
