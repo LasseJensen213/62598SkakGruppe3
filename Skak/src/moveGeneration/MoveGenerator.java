@@ -152,7 +152,7 @@ public class MoveGenerator {
 									Point fieldToCheck = new Point();
 									// We trying to long castle.
 									if (newMove.getStartCoor().getX() > newMove.getEndCoor().getX()) {
-										boolean canCastle = boardState.getTurn() == Color.BLACK ? boardState.isBlackLongCastle() : boardState.isWhiteLongCastle();
+										boolean canCastle = boardState.getTurn() == Color.BLACK ? boardState.isBlackShortCastle() : boardState.isWhiteShortCastle();
 										if(!canCastle)
 											continue;
 										Move castleMove = new Move(piece , piece.getCoordinates() , new Point(newCoords.x+1 , newCoords.y));
@@ -179,14 +179,14 @@ public class MoveGenerator {
 										{
 											((King) newMove.getMovingPiece()).setUnmoved(false);
 											newMove.setSpecial(true);
-											newMove.setSpecialMove(Move.SpecialMove.LONG_CASTLE);
+											newMove.setSpecialMove(Move.SpecialMove.SHORT_CASTLE);
 											newMove.addAdditionalPoints(Values.KINGCASTLE);
 											betterThanAvarage.add(newMove);
 										}
 									}
 									// We trying to short castle.
 									else {
-										boolean canCastle = boardState.getTurn() == Color.BLACK ? boardState.isBlackShortCastle() : boardState.isWhiteShortCastle();
+										boolean canCastle = boardState.getTurn() == Color.BLACK ? boardState.isBlackLongCastle() : boardState.isWhiteLongCastle();
 										if(!canCastle)
 											continue;
 										Move castleMove = new Move(piece , piece.getCoordinates() , new Point(newCoords.x-1 , newCoords.y));
@@ -213,7 +213,7 @@ public class MoveGenerator {
 										{
 											((King) newMove.getMovingPiece()).setUnmoved(false);
 											newMove.setSpecial(true);
-											newMove.setSpecialMove(Move.SpecialMove.SHORT_CASTLE);
+											newMove.setSpecialMove(Move.SpecialMove.LONG_CASTLE);
 											betterThanAvarage.add(newMove);
 										}
 

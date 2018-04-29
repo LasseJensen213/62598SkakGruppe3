@@ -6,7 +6,7 @@ import piece.Move;
 public class TimedAlgorithm {
 
     private static TimedAlgorithm INSTANCE = new TimedAlgorithm();
-    private long maxWaitTime = 15000;
+    public long maxWaitTime = 15000;
     public Move bestMoveSoFar = null;
     public boolean stalemate = false;
     public Thread timerThread = null; //Does all the work in the algorithm - and constantly updates best move

@@ -29,9 +29,8 @@ public class Main {
         FEN.FILE_PATH = System.getProperty("user.dir")+"/FENLOG.txt";
         while(true){
             String line = scanner.nextLine();
-            if(line.equals("white")){
+            if(line.equals("go")){
                 //Engine is white
-                GameController.getInstance().board.setTurn(IPiece.Color.WHITE);
                 Move move = GameController.getInstance().getAIMove();
                 if(move == null)
                     System.out.println("resign");
@@ -73,32 +72,69 @@ public class Main {
             }
         }
         //First move(s) have been made, let AI make move and wait for user move in loop
-
         while(true){
             //Make AI move
             Move move = GameController.getInstance().getAIMove();
-            if(move == null)
-                System.out.println("resign");
-            else
-            {
-                System.out.println("move " + move.algebraicNotation());//Send move command to WinBoard
-
-            }
-
-            GameController.getInstance().makeMove(move);
-            fen = FEN.encode((Board) GameController.getInstance().board);
-            FEN.saveToFile(fen);
-
+            processAIMove(move);
             //Wait for user move
-            String line = scanner.nextLine();
-            while(!Pattern.matches("[a-h]\\d[a-h]\\d",line)){
-                line = scanner.nextLine();
-            }
-            //User has made her move
-            GameController.getInstance().makeMove(line);
-            fen = FEN.encode((Board) GameController.getInstance().board);
-            FEN.saveToFile(fen);
+            boolean receivedMove = false;
+            while(!receivedMove){
+                String line = scanner.nextLine();
+                receivedMove = processWinboardMessage(line);
+            }//User has made her move
+
         }
 
+    }
+
+    public static boolean processWinboardMessage(String line)
+    {
+        String fen = "";
+        if(Pattern.matches("[a-h]\\d[a-h]\\d",line))
+        {
+            GameController.getInstance().makeMove(line);//Make the move WinBoard indicated
+            fen = FEN.encode((Board) GameController.getInstance().board);
+            FEN.saveToFile(fen);
+            return true;
+
+        }
+        else if(Pattern.matches("[a-h]\\d[a-h]\\d[qrnb]]",line))
+        {
+            GameController.getInstance().makePromotionMove(line);//Make the move WinBoard indicated
+            fen = FEN.encode((Board) GameController.getInstance().board);
+            FEN.saveToFile(fen);
+            return true;
+        }
+        return false; // We haven't received a move yet
+    }
+
+    public static void processAIMove(Move move)
+    {
+        String fen = "";
+        if(move == null)
+            System.out.println("resign");
+        else if(move.getSpecialMove()== Move.SpecialMove.PROMOTION_QUEEN)
+        {
+            System.out.println("move " + move.algebraicNotation()+"q");//Send move command to WinBoard
+        }
+        else if(move.getSpecialMove()== Move.SpecialMove.PROMOTION_KNIGHT)
+        {
+            System.out.println("move " + move.algebraicNotation()+"n");//Send move command to WinBoard
+        }
+        else if(move.getSpecialMove() == Move.SpecialMove.PROMOTION_BISHOP)
+        {
+            System.out.println("move " + move.algebraicNotation()+"b");//Send move command to WinBoard
+        }
+        else if(move.getSpecialMove() == Move.SpecialMove.PROMOTION_ROOK)
+        {
+            System.out.println("move " + move.algebraicNotation()+"r");//Send move command to WinBoard
+        }
+        else
+        {
+            System.out.println("move " + move.algebraicNotation());//Send move command to WinBoard
+        }
+        GameController.getInstance().makeMove(move);
+        fen = FEN.encode((Board) GameController.getInstance().board);
+        FEN.saveToFile(fen);
     }
 }

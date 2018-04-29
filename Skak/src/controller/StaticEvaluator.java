@@ -103,7 +103,7 @@ public class StaticEvaluator {
                                 blackValue += 900 + coveredFieldsQueen(chessBoard , x , y , IPiece.Color.BLACK);
                                 break;
                             case Pawn:
-                                blackValue += 100 + pawRow[y]+ (pawLin[x]*y)/2;
+                                blackValue += 100 + pawRow[7-y]+ (pawLin[7-x]*(7-y))/2;
                                 break;
                             case Rook:
                                 blackValue += 500 + 1.5*coveredFieldsRook(chessBoard , x , y , IPiece.Color.BLACK);
