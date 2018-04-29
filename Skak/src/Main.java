@@ -1,4 +1,5 @@
 import controller.GameController;
+import controller.TimedAlgorithm;
 import data.Board;
 import fen.FEN;
 import interfaces.IPiece;
@@ -70,6 +71,10 @@ public class Main {
                 FEN.saveToFile(fen);
                 break;
             }
+            else if(line.equalsIgnoreCase("post"))
+            {
+                TimedAlgorithm.getINSTANCE().post = true;
+            }
         }
         //First move(s) have been made, let AI make move and wait for user move in loop
         while(true){
@@ -105,6 +110,7 @@ public class Main {
             FEN.saveToFile(fen);
             return true;
         }
+
         return false; // We haven't received a move yet
     }
 

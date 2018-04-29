@@ -40,7 +40,7 @@ public class Algorithm {
             TimedAlgorithm.getINSTANCE().bestMoveSoFar = result;
             totalTimeTaken += iterationTimePassed;
             depth++;
-            if(running)
+            if(running && TimedAlgorithm.getINSTANCE().post)
             {
                 System.out.println(depth +"    "+bestScore+"    "+(int)(totalTimeTaken/10.0)+"    "+nodesSearched+"    WHODIS\t");
                 System.out.flush();
