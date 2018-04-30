@@ -122,14 +122,19 @@ public class MoveGenerator {
 
 							Move newMove = new Move(piece, piece.getCoordinates(), newCoords);
 							if(boardState.getChessBoard()[newCoords.x][newCoords.y] != null && boardState.getChessBoard()[newCoords.x][newCoords.y].getType() == Type.King)
+							{
+								directions.put(newDirection , false);
 								continue;
+							}
 							newMove.setOffensive(boardState.enemyPiecePresent(newCoords, piece.getColor()));
-							if(boardState.isKingInCheckAfterMove(boardState.getTurn() , newMove))
-								continue;
-							newMove.setIsCheckMove(boardState.isKingInCheckAfterMove(adversaryColor , newMove ));
 							if (newMove.isOffensive()) {
 								directions.put(newDirection, false);
 							}
+
+							if(boardState.isKingInCheckAfterMove(boardState.getTurn() , newMove))
+								continue;
+							newMove.setIsCheckMove(boardState.isKingInCheckAfterMove(adversaryColor , newMove ));
+
 
 							// Pawn moves:
 							// System.out.println("Type: " + piece.getType() + " oldCoords: " +
@@ -301,6 +306,35 @@ public class MoveGenerator {
 
 	private void generatePawnMove(Point diff, IPiece piece, Point newCoords, Move newMove) {
 		// Can the pawn move forward?
+		// Promotion
+		if (newMove.getEndCoor().getY() == 7 ||newMove.getEndCoor().getY() == 0) {
+			IPiece queen = new Queen(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
+			IPiece bishop = new Bishop(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
+			IPiece knight = new Knight(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
+			IPiece rook = new Rook(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
+
+			Move queenMove = new Move(queen, newMove.getStartCoor(), newMove.getEndCoor());
+			Move bishopMove = new Move(bishop, newMove.getStartCoor(), newMove.getEndCoor());
+			Move knightMove = new Move(knight, newMove.getStartCoor(), newMove.getEndCoor());
+			Move rookMove = new Move(rook, newMove.getStartCoor(), newMove.getEndCoor());
+
+			queenMove.setSpecial(true);
+			bishopMove.setSpecial(true);
+			knightMove.setSpecial(true);
+			rookMove.setSpecial(true);
+			queenMove.setSpecialMove(Move.SpecialMove.PROMOTION_QUEEN);
+			rookMove.setSpecialMove(Move.SpecialMove.PROMOTION_ROOK);
+			bishopMove.setSpecialMove(Move.SpecialMove.PROMOTION_BISHOP);
+			knightMove.setSpecialMove(Move.SpecialMove.PROMOTION_KNIGHT);
+
+
+			betterThanAvarage.add(queenMove);
+			betterThanAvarage.add(bishopMove);
+			betterThanAvarage.add(knightMove);
+			betterThanAvarage.add(rookMove);
+			return;
+
+		}
 		if (diff.getX() == 0) {
 			// If the pawn isn't moving in the x direction.
 			if (newMove.isOffensive()) {
@@ -311,36 +345,6 @@ public class MoveGenerator {
 			// Add extra points if it is or is becoming a center pawn.
 			if (1 < newCoords.getX() && newCoords.getX() < 6) {
 				newMove.addAdditionalPoints(Values.CENTERPAWN);
-			}
-
-			// Promotion
-			if (newMove.getEndCoor().getY() == 7 ||newMove.getEndCoor().getY() == 0) {
-				IPiece queen = new Queen(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
-				IPiece bishop = new Bishop(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
-				IPiece knight = new Knight(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
-				IPiece rook = new Rook(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
-
-				Move queenMove = new Move(queen, newMove.getStartCoor(), newMove.getEndCoor());
-				Move bishopMove = new Move(bishop, newMove.getStartCoor(), newMove.getEndCoor());
-				Move knightMove = new Move(knight, newMove.getStartCoor(), newMove.getEndCoor());
-				Move rookMove = new Move(rook, newMove.getStartCoor(), newMove.getEndCoor());
-
-				queenMove.setSpecial(true);
-				bishopMove.setSpecial(true);
-				knightMove.setSpecial(true);
-				rookMove.setSpecial(true);
-				queenMove.setSpecialMove(Move.SpecialMove.PROMOTION_QUEEN);
-				rookMove.setSpecialMove(Move.SpecialMove.PROMOTION_ROOK);
-				bishopMove.setSpecialMove(Move.SpecialMove.PROMOTION_BISHOP);
-				knightMove.setSpecialMove(Move.SpecialMove.PROMOTION_KNIGHT);
-
-
-				betterThanAvarage.add(queenMove);
-				betterThanAvarage.add(bishopMove);
-				betterThanAvarage.add(knightMove);
-				betterThanAvarage.add(rookMove);
-				return;
-
 			}
 
 			pawnMoves.add(newMove);
