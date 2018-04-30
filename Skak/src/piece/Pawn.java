@@ -33,13 +33,14 @@ public class Pawn extends Piece {
 			legalMoves.add(new Point(0, +1));
 
 			// If at start position:
-			if (((int) super.getCoordinates().getY()) == 1) {
-				legalMoves.add(new Point(0, +2));
-			}
+
 			if(getCoordinates().x != 7)
 				legalMoves.add(new Point(+1, +1));
 			if(getCoordinates().x != 0)
 				legalMoves.add(new Point(-1, +1));
+			if (((int) super.getCoordinates().getY()) == 1) {
+				legalMoves.add(new Point(0, +2));
+			}
 
 
 		}
@@ -47,14 +48,15 @@ public class Pawn extends Piece {
 		else {
 			legalMoves.add(new Point(0, -1));
 
-			if (((int) super.getCoordinates().getY()) == 6) {
-				legalMoves.add(new Point(0, -2));
 
-			}
 			if(getCoordinates().x != 0)
 				legalMoves.add(new Point(-1, -1));
 			if(getCoordinates().x != 7)
 				legalMoves.add(new Point(+1, -1));
+			if (((int) super.getCoordinates().getY()) == 6) {
+				legalMoves.add(new Point(0, -2));
+
+			}
 		}
 
 		return legalMoves;

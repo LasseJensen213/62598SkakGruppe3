@@ -1,12 +1,13 @@
 package controller;
 
-import data.Board;
 import piece.Move;
 
 public class TimedAlgorithm {
 
     private static TimedAlgorithm INSTANCE = new TimedAlgorithm();
-    public long maxWaitTime = 15000;
+    public final static long  MAX_TIME_LIMIT = 25000;
+    public final static long START_TIME_LIMIT = 15000;
+    public long currentTimeLimit = START_TIME_LIMIT;
     public Move bestMoveSoFar = null;
     public boolean stalemate = false;
     public Thread timerThread = null; //Does all the work in the algorithm - and constantly updates best move
@@ -24,8 +25,9 @@ public class TimedAlgorithm {
         try {
             this.timerThread = Thread.currentThread();
             algorithmThread.start();
-            maxWaitTime = (15000+500*GameController.getInstance().board.getFullMoves()) > 25000 ? 25000:(15000+500*GameController.getInstance().board.getFullMoves()) ;
-            Thread.sleep(maxWaitTime);
+            currentTimeLimit = (START_TIME_LIMIT+500*GameController.getInstance().board.getFullMoves()) > MAX_TIME_LIMIT ?
+                                MAX_TIME_LIMIT:(START_TIME_LIMIT+500*GameController.getInstance().board.getFullMoves()) ;
+            Thread.sleep(currentTimeLimit);
         } catch (InterruptedException e) {
 
         }

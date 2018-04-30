@@ -155,7 +155,7 @@ public class Board implements IBoard {
 			setPieceNull(newMove.getStartCoor());
 
 			if (newMove.isSpecial()) {
-				//System.out.println("Pawn promo to bishop");
+				chessBoard[newMove.getEndCoor().x][newMove.getEndCoor().y] = newMove.getMovingPiece();
 			}
 			break;
 
@@ -214,7 +214,7 @@ public class Board implements IBoard {
 			//setPieceNull(newMove.getStartCoor());
 
 			if (newMove.isSpecial()) {
-				//System.out.println("Pawn promo to knight");
+				chessBoard[newMove.getEndCoor().x][newMove.getEndCoor().y] = newMove.getMovingPiece();
 			}
 			break;
 
@@ -249,11 +249,11 @@ public class Board implements IBoard {
 				Point pieceToTake = new Point();
 				switch (newMove.getMovingPiece().getColor()) {
 				case BLACK:
-					pieceToTake.setLocation(newMove.getEndCoor().getX(), 4);
+					pieceToTake.setLocation(newMove.getEndCoor().getX(), 3);
 
 					break;
 				case WHITE:
-					pieceToTake.setLocation(newMove.getEndCoor().getX(), 5);
+					pieceToTake.setLocation(newMove.getEndCoor().getX(), 4);
 
 					break;
 				default:
@@ -268,7 +268,7 @@ public class Board implements IBoard {
 			this.setPiece(newMove.getEndCoor(), this.getPiece(newMove.getStartCoor()));
 			setPieceNull(newMove.getStartCoor());
 			if (newMove.isSpecial()) {
-				//System.out.println("Pawn promo to queen");
+				chessBoard[newMove.getEndCoor().x][newMove.getEndCoor().y] = newMove.getMovingPiece();
 			}
 
 			break;
@@ -311,7 +311,7 @@ public class Board implements IBoard {
 			setPieceNull(newMove.getStartCoor());
 
 			if (newMove.isSpecial()) {
-				//System.out.println("Pawn promo to rook");
+				chessBoard[newMove.getEndCoor().x][newMove.getEndCoor().y] = newMove.getMovingPiece();
 			}
 			break;
 		default:
@@ -695,9 +695,17 @@ public class Board implements IBoard {
 				piece = chessBoard[kingX-1][kingY+1];
 				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Pawn)
 				{
-					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
-					chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
-					return true;
+					//Need to check that we can't attack this piece with en passant
+					if(move.getMovingPiece().getType() == Type.Pawn && enPassant != null && enPassant.equals(move.getEndCoor()))
+					{
+
+					}
+					else
+					{
+						chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+						chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+						return true;
+					}
 				}
 			}
 			if(kingX != 7)
@@ -705,9 +713,17 @@ public class Board implements IBoard {
 				piece = chessBoard[kingX+1][kingY+1];
 				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Pawn)
 				{
-					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
-					chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
-					return true;
+					if(move.getMovingPiece().getType() == Type.Pawn && enPassant != null && enPassant.equals(move.getEndCoor()))
+					{
+
+					}
+					else
+					{
+						chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+						chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+						return true;
+					}
+
 				}
 			}
 		}
@@ -719,9 +735,16 @@ public class Board implements IBoard {
 				piece = chessBoard[kingX-1][kingY-1];
 				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Pawn)
 				{
-					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
-					chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
-					return true;
+					if(move.getMovingPiece().getType() == Type.Pawn && enPassant != null && enPassant.equals(move.getEndCoor()))
+					{
+
+					}
+					else
+					{
+						chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+						chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+						return true;
+					}
 				}
 			}
 			if(kingX != 7)
@@ -729,9 +752,16 @@ public class Board implements IBoard {
 				piece = chessBoard[kingX+1][kingY-1];
 				if(piece != null && piece.getColor() != currentKing.getColor() && piece.getType() == Type.Pawn)
 				{
-					chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
-					chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
-					return true;
+					if(move.getMovingPiece().getType() == Type.Pawn && enPassant != null && enPassant.equals(move.getEndCoor()))
+					{
+
+					}
+					else
+					{
+						chessBoard[move.getEndCoor().x][move.getEndCoor().y] = possibleCapture;
+						chessBoard[move.getStartCoor().x][move.getStartCoor().y] = move.getMovingPiece(); // Undoing the move
+						return true;
+					}
 				}
 			}
 		}

@@ -121,6 +121,8 @@ public class MoveGenerator {
 						if (!(boardState.allyPiecePresent(newCoords, piece.getColor()))) {
 
 							Move newMove = new Move(piece, piece.getCoordinates(), newCoords);
+							if(boardState.getChessBoard()[newCoords.x][newCoords.y] != null && boardState.getChessBoard()[newCoords.x][newCoords.y].getType() == Type.King)
+								continue;
 							newMove.setOffensive(boardState.enemyPiecePresent(newCoords, piece.getColor()));
 							if(boardState.isKingInCheckAfterMove(boardState.getTurn() , newMove))
 								continue;
@@ -312,7 +314,7 @@ public class MoveGenerator {
 			}
 
 			// Promotion
-			if (newMove.getEndCoor().getY() == 7) {
+			if (newMove.getEndCoor().getY() == 7 ||newMove.getEndCoor().getY() == 0) {
 				IPiece queen = new Queen(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
 				IPiece bishop = new Bishop(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
 				IPiece knight = new Knight(newMove.getMovingPiece().getColor(), newMove.getEndCoor());
@@ -337,6 +339,7 @@ public class MoveGenerator {
 				betterThanAvarage.add(bishopMove);
 				betterThanAvarage.add(knightMove);
 				betterThanAvarage.add(rookMove);
+				return;
 
 			}
 
@@ -363,7 +366,7 @@ public class MoveGenerator {
 					// If the piece is white
 					if (piece.getColor().equals(Color.WHITE)) {
 						// If it's in the correct row.
-						if (piece.getCoordinates().getX() == 4) {
+						if (piece.getCoordinates().y == 4) {
 							// Has a pawn recently moved over this field?
 
 							if (boardState.getEnPassant().equals(newCoords)) {
@@ -375,7 +378,7 @@ public class MoveGenerator {
 					// Piece is black.
 					else {
 						// If it's in the correct row.
-						if (piece.getCoordinates().getX() == 3) {
+						if (piece.getCoordinates().y == 3) {
 							// Has a pawn recently moved over this field?
 							if (boardState.getEnPassant().equals(newCoords)) {
 								newMove.setSpecial(true);

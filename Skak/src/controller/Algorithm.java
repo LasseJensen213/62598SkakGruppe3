@@ -8,9 +8,6 @@ import moveGeneration.MoveGenerator;
 import piece.Move;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import static java.util.Arrays.asList;
 
 public class Algorithm {
     private static IPiece.Color AIColor;
@@ -44,12 +41,14 @@ public class Algorithm {
             {
                 System.out.println(depth +"    "+bestScore+"    "+(int)(totalTimeTaken/10.0)+"    "+nodesSearched+"    WHODIS\t");
                 System.out.flush();
-                if(totalTimeTaken*depth > TimedAlgorithm.getINSTANCE().maxWaitTime)
+                if(totalTimeTaken*depth > TimedAlgorithm.getINSTANCE().currentTimeLimit)
                 {
                     TimedAlgorithm.getINSTANCE().timerThread.interrupt();
                 }
             }
-            //System.err.println("Spent " + iterationTimePassed+"ms at ply "+depth + " Total time passed "+totalTimeTaken/1000.0+"s"+ " Nodes searched "+nodesSearched);
+            //System.err.println("Spent " + iterationTimePassed+"ms at ply "+depth + " Total time passed "+
+            //        totalTimeTaken/1000.0+"s"+ " Nodes searched "+nodesSearched +
+            //        "\nNPS: "+ nodesSearched/(iterationTimePassed/1000.0));
         }
 
         //System.err.println("Spent "+totalTimeTaken/1000.0+"seconds in total. Max Depth achieved "+(depth-1));
