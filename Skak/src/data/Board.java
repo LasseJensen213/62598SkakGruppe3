@@ -173,12 +173,14 @@ public class Board implements IBoard {
 					IPiece rook = this.chessBoard[0][7];
 					this.chessBoard[0][7] = null;
 					this.chessBoard[3][7] = rook;
+					rook.setCoordinates(new Point(3,7));
 				}
 				else if(newMove.getSpecialMove() == Move.SpecialMove.SHORT_CASTLE)
 				{
 					IPiece rook = this.chessBoard[7][7];
 					this.chessBoard[7][7] = null;
 					this.chessBoard[5][7] = rook;
+					rook.setCoordinates(new Point(5 ,7));
 				}
 				break;
 			case WHITE:
@@ -189,12 +191,14 @@ public class Board implements IBoard {
 					IPiece rook = this.chessBoard[0][0];
 					this.chessBoard[0][0] = null;
 					this.chessBoard[3][0] = rook;
+					rook.setCoordinates(new Point(3 ,0));
 				}
 				else if(newMove.getSpecialMove() == Move.SpecialMove.SHORT_CASTLE)
 				{
 					IPiece rook = this.chessBoard[7][0];
 					this.chessBoard[7][0] = null;
 					this.chessBoard[5][0] = rook;
+					rook.setCoordinates(new Point(5 ,0));
 				}
 				break;
 			default:

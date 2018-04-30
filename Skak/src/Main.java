@@ -33,6 +33,7 @@ public class Main {
             if(line.equals("go")){
                 //Engine is white
                 Move move = GameController.getInstance().getAIMove();
+
                 if(move == null)
                     System.out.println("resign");
                 else if(move.getSpecialMove()== Move.SpecialMove.PROMOTION_QUEEN)
@@ -64,7 +65,7 @@ public class Main {
                 FEN.saveToFile(fen);
                 break;
             }
-            else if(Pattern.matches("[a-h]\\d[a-h]\\d[qrnb]]",line))
+            else if(Pattern.matches("[a-h]\\d[a-h]\\d[qrnb]",line))
             {
                 GameController.getInstance().makePromotionMove(line);//Make the move WinBoard indicated
                 fen = FEN.encode((Board) GameController.getInstance().board);
@@ -103,7 +104,7 @@ public class Main {
             return true;
 
         }
-        else if(Pattern.matches("[a-h]\\d[a-h]\\d[qrnb]]",line))
+        else if(Pattern.matches("[a-h]\\d[a-h]\\d[qrnb]",line))
         {
             GameController.getInstance().makePromotionMove(line);//Make the move WinBoard indicated
             fen = FEN.encode((Board) GameController.getInstance().board);

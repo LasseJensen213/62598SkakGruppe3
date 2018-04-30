@@ -150,8 +150,8 @@ public class MoveGenerator {
 										continue;
 									// Check path to rook for short castle.
 									Point fieldToCheck = new Point();
-									// We trying to long castle.
-									if (newMove.getStartCoor().getX() > newMove.getEndCoor().getX()) {
+									// We trying to short castle.
+									if (newMove.getStartCoor().getX() < newMove.getEndCoor().getX()) {
 										boolean canCastle = boardState.getTurn() == Color.BLACK ? boardState.isBlackShortCastle() : boardState.isWhiteShortCastle();
 										if(!canCastle)
 											continue;
@@ -184,7 +184,7 @@ public class MoveGenerator {
 											betterThanAvarage.add(newMove);
 										}
 									}
-									// We trying to short castle.
+									// We trying to long castle.
 									else {
 										boolean canCastle = boardState.getTurn() == Color.BLACK ? boardState.isBlackLongCastle() : boardState.isWhiteLongCastle();
 										if(!canCastle)
@@ -280,7 +280,7 @@ public class MoveGenerator {
 
 			}
 			else {
-				System.out.println("Konge i skak");
+				//System.out.println("Konge i skak");
 			}
 		}
 		//generateNewBoardStates();
@@ -327,6 +327,11 @@ public class MoveGenerator {
 				bishopMove.setSpecial(true);
 				knightMove.setSpecial(true);
 				rookMove.setSpecial(true);
+				queenMove.setSpecialMove(Move.SpecialMove.PROMOTION_QUEEN);
+				rookMove.setSpecialMove(Move.SpecialMove.PROMOTION_ROOK);
+				bishopMove.setSpecialMove(Move.SpecialMove.PROMOTION_BISHOP);
+				knightMove.setSpecialMove(Move.SpecialMove.PROMOTION_KNIGHT);
+
 
 				betterThanAvarage.add(queenMove);
 				betterThanAvarage.add(bishopMove);

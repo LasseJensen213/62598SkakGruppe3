@@ -5,7 +5,7 @@ import fen.FEN;
 import fen.InvalidFENStringException;
 import interfaces.IBoard;
 import interfaces.IPiece;
-import piece.Move;
+import piece.*;
 
 import java.awt.*;
 
@@ -46,18 +46,31 @@ public class GameController {
         int fromY = (int)(move.charAt(1)-'0')-1;
         int toX = (int)(move.charAt(2)-'a');
         int toY = (int)(move.charAt(3)-'0')-1;
-        IPiece piece = board.getPiece(new Point(fromX, fromY));
-        Move newMove = new Move(piece , new Point(fromX, fromY),new Point(toX, toY));
+        Point startcoor = new Point(fromX , fromY);
+        Point endcoor = new Point(toX , toY);
+        IPiece piece = board.getPiece(startcoor);
+        IPiece other = board.getPiece(endcoor);
+        boolean offensive = false;
+        if(other != null)
+            offensive = true;
+        Move newMove = new Move(piece , startcoor,endcoor);
+        newMove.setOffensive(offensive);
         if(piece.getType() == IPiece.Type.King)
-            if((fromX-toX)>1)
+        {
+            if((fromX-toX) == 2)
                 newMove.setSpecialMove(Move.SpecialMove.LONG_CASTLE);
-            else if((fromX-toX) <-1)
+            else if((fromX-toX) == -2)
                 newMove.setSpecialMove(Move.SpecialMove.SHORT_CASTLE);
+        }
         else if(piece.getType() == IPiece.Type.Pawn)
             {
-                if(board.getEnPassant().equals(new Point(toX, toY)))
+                if(board.getEnPassant() != null && board.getEnPassant().equals(new Point(toX, toY))){
                     newMove.setSpecialMove(Move.SpecialMove.EN_PASSANT);
+                    newMove.setSpecial(true);
+                }
+
             }
+        newMove.setIsCheckMove(board.isKingInCheckAfterMove((board.getTurn() == IPiece.Color.BLACK ? IPiece.Color.WHITE : IPiece.Color.BLACK) , newMove));
         makeMove(newMove);
     }
 
@@ -68,16 +81,25 @@ public class GameController {
         int toX = (int)(move.charAt(2)-'a');
         int toY = (int)(move.charAt(3)-'0')-1;
         char promotedTo = move.charAt(4);
-        IPiece piece = board.getPiece(new Point(fromX, fromY));
-        Move newMove = new Move(piece , new Point(fromX, fromY),new Point(toX, toY));
+        Point endcoor = new Point(toX , toY);
+        Point startcoor = new Point(fromX , fromY);
+        IPiece piece = board.getPiece(startcoor);
+        IPiece other = board.getPiece(endcoor);
+        boolean offensive = false;
+        if(other != null)
+            offensive = true;
         if(promotedTo == 'q')
-            newMove.setSpecialMove(Move.SpecialMove.PROMOTION_QUEEN);
+            piece = new Queen(piece.getColor() , endcoor);
         else if(promotedTo=='r')
-            newMove.setSpecialMove(Move.SpecialMove.PROMOTION_ROOK);
+            piece = new Rook(piece.getColor() , endcoor);
         else if(promotedTo=='n')
-            newMove.setSpecialMove(Move.SpecialMove.PROMOTION_KNIGHT);
+            piece = new Knight(piece.getColor() , endcoor);
         else
-            newMove.setSpecialMove(Move.SpecialMove.PROMOTION_BISHOP);
+            piece = new Bishop(piece.getColor() , endcoor);
+        Move newMove = new Move(piece , startcoor,endcoor);
+        newMove.setOffensive(offensive);
+        newMove.setSpecial(true);
+        newMove.setIsCheckMove(board.isKingInCheckAfterMove((board.getTurn() == IPiece.Color.BLACK ? IPiece.Color.WHITE : IPiece.Color.BLACK) , newMove));
         makeMove(newMove);
 
 

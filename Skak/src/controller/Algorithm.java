@@ -19,8 +19,10 @@ public class Algorithm {
     private static int bestScore = 0;
     private static int bestMoveIndex = -1;
     public static boolean running;
+    public static int c = 0;
     public static void makeMove(IBoard board)
     {
+        c++;
         running = true;
         AIColor = board.getTurn();
         long currentTime = System.currentTimeMillis();
@@ -49,7 +51,7 @@ public class Algorithm {
                     TimedAlgorithm.getINSTANCE().timerThread.interrupt();
                 }
             }
-            //System.err.println("Spent " + iterationTimePassed+"ms at ply "+depth + " Total time passed "+totalTimeTaken/1000.0+"s");
+            //System.err.println("Spent " + iterationTimePassed+"ms at ply "+depth + " Total time passed "+totalTimeTaken/1000.0+"s"+ " Nodes searched "+nodesSearched);
         }
 
         //System.err.println("Spent "+totalTimeTaken/1000.0+"seconds in total. Max Depth achieved "+(depth-1));
@@ -88,7 +90,7 @@ public class Algorithm {
                 child =  new Board((Board) board, tmp);
                 //long tBefore = System.currentTimeMillis();
                 result = alphaBeta(child , 1 , alpha , beta , currentDepth-1 , maxDepth);
-                nodesSearched++;
+                //nodesSearched++;
                 if(result > alpha)
                 {
                     alpha = result;
@@ -125,6 +127,7 @@ public class Algorithm {
     {
         if(currentDepth == 0)
         {
+            nodesSearched++;
             return StaticEvaluator.StaticEvaulation(board , maxDepth , minimaxLevel , false);
         }
         MoveGenerator mg = new MoveGenerator(board);
@@ -133,6 +136,7 @@ public class Algorithm {
 
         if(moves.isEmpty())
         {
+            nodesSearched++;
             return StaticEvaluator.StaticEvaulation(board , maxDepth-currentDepth , minimaxLevel , true);
         }
         IBoard child = null;
@@ -145,7 +149,7 @@ public class Algorithm {
             {
                 child = new Board((Board) board, move);
                 result = alphaBeta(child , 1 , alpha , beta , currentDepth-1 , maxDepth);
-                nodesSearched++;
+                //nodesSearched++;
                 alpha = result > alpha ? result : alpha;
 
             }
@@ -157,7 +161,7 @@ public class Algorithm {
             {
                 child = new Board((Board) board, move);
                 result = alphaBeta(child , 0 , alpha , beta , currentDepth-1 , maxDepth);
-                nodesSearched++;
+                //nodesSearched++;
                 beta = result < beta ? result : beta;
 
             }
