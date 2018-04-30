@@ -19,10 +19,8 @@ public class Algorithm {
     private static int bestScore = 0;
     private static int bestMoveIndex = -1;
     public static boolean running;
-    public static int c = 0;
     public static void makeMove(IBoard board)
     {
-        c++;
         running = true;
         AIColor = board.getTurn();
         long currentTime = System.currentTimeMillis();
