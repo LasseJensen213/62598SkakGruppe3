@@ -7,7 +7,7 @@ public class TimedAlgorithm {
     private static TimedAlgorithm INSTANCE = new TimedAlgorithm();
     public final static long  MAX_TIME_LIMIT = 25000;
     public final static long START_TIME_LIMIT = 15000;
-    public long currentTimeLimit = START_TIME_LIMIT+71982317;
+    public long currentTimeLimit = START_TIME_LIMIT;
     public Move bestMoveSoFar = null;
     public boolean stalemate = false;
     public Thread timerThread = null; //Does all the work in the algorithm - and constantly updates best move
