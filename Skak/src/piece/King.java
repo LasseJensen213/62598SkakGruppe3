@@ -28,7 +28,7 @@ public class King extends Piece {
 				new Point((int) iPiece.getCoordinates().getX(), (int) iPiece.getCoordinates().getY()));
 		legalMoves = new ArrayList<>();
 		inCheckMoves = new ArrayList<>();
-		this.unmoved = ((King)iPiece).unmoved;
+		this.unmoved = ((King) iPiece).unmoved;
 	}
 
 	public boolean isCheck() {
@@ -59,24 +59,19 @@ public class King extends Piece {
 		return legalMoves;
 	}
 
-	
-	
-	
-	
-	
 	public ArrayList<Point> getInCheckMoves() {
 		// Can be checked from all directions.
 		for (int i = 1; i < 8; i++) {
-			legalMoves.add(new Point(i, 0));	//Right
-			legalMoves.add(new Point(-i, 0));	//Left
-			legalMoves.add(new Point(0, i));	//Up
-			legalMoves.add(new Point(0, -i));	//Down
-			legalMoves.add(new Point(i, i));	//Up - Right
-			legalMoves.add(new Point(-i, i));	//Up - Left
-			legalMoves.add(new Point(-i, -i));	//Down - Left
-			legalMoves.add(new Point(i, -i));	//Down - Right
+			legalMoves.add(new Point(i, 0)); // Right
+			legalMoves.add(new Point(-i, 0)); // Left
+			legalMoves.add(new Point(0, i)); // Up
+			legalMoves.add(new Point(0, -i)); // Down
+			legalMoves.add(new Point(i, i)); // Up - Right
+			legalMoves.add(new Point(-i, i)); // Up - Left
+			legalMoves.add(new Point(-i, -i)); // Down - Left
+			legalMoves.add(new Point(i, -i)); // Down - Right
 		}
-		//And from knight moves. 
+		// And from knight moves.
 		legalMoves.add(new Point(-2, -1));
 		legalMoves.add(new Point(-2, +1));
 		legalMoves.add(new Point(-1, +2));
@@ -85,7 +80,7 @@ public class King extends Piece {
 		legalMoves.add(new Point(+2, -1));
 		legalMoves.add(new Point(+1, -2));
 		legalMoves.add(new Point(-1, -2));
-		
+
 		return inCheckMoves;
 	}
 
@@ -97,8 +92,7 @@ public class King extends Piece {
 		this.unmoved = unmoved;
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		return this.color == Color.BLACK ? "k" : "K";
 	}
 

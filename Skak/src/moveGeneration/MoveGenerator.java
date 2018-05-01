@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import data.Board;
-import data.Data;
 import data.Values;
 import datastructures.Stack;
 import interfaces.IBoard;
-import interfaces.IData;
 import interfaces.IPiece;
 import interfaces.IPiece.Color;
 import interfaces.IPiece.Type;
@@ -32,7 +30,6 @@ public class MoveGenerator {
 	private boolean kingIncheck = false;
 	private IBoard boardState;
 
-	IData data = new Data();
 
 	/**
 	 * Takes a boardstate, so that it knows which pieces exists.
@@ -60,7 +57,6 @@ public class MoveGenerator {
 		this.offensiveMoves = new ArrayList<>();
 		this.officerMoves = new ArrayList<>();
 		this.pawnMoves = new ArrayList<>();
-		//System.out.println("Generating for side:" + boardState.getTurn());
 		ArrayList<IPiece> pieces = boardState.getPieces();
 		HashMap<Point, Boolean> directions = new HashMap<>();
 
@@ -75,12 +71,9 @@ public class MoveGenerator {
 		Point downRightPoint = new Point(1, -1);
 
 		Color adversaryColor = boardState.getTurn() == Color.BLACK ? Color.WHITE : Color.BLACK;
-		int i = 0;
 		for (IPiece piece : pieces) {
 
-			//System.out.println("i: " + i + " piece: " + piece.getType() + " Coor: " + piece.getCoordinates());
 
-			i++;
 			// Reset directionsmap
 			directions.clear();
 			directions.put(rightPoint, true); // Right
@@ -136,9 +129,6 @@ public class MoveGenerator {
 							newMove.setIsCheckMove(boardState.isKingInCheckAfterMove(adversaryColor , newMove ));
 
 
-							// Pawn moves:
-							// System.out.println("Type: " + piece.getType() + " oldCoords: " +
-							// piece.getCoordinates().toString() + " endcoor: " + newMove.getEndCoor());
 							switch (piece.getType()) {
 							case Bishop:
 								if (newMove.isOffensive()) {
@@ -287,12 +277,9 @@ public class MoveGenerator {
 
 			}
 			else {
-				//System.out.println("Konge i skak");
 			}
 		}
-		//generateNewBoardStates();
-		// System.out.println("EndOfGeneration");
-		//System.out.println(boardState.toString());
+		
 
 	}
 

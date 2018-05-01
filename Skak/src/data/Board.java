@@ -32,7 +32,7 @@ public class Board implements IBoard {
 	private King blackKing;
 	private King whiteKing;
 	private boolean isChecked = false;
-	private static int[] knightMoves = {0x21 , 0x1F , 0x12 , 0x0E , -0x21 , -0x1F , -0x12 , -0x0E}; // Mainly using this for checking if king is in chech
+	private static int[] knightMoves = {0x21 , 0x1F , 0x12 , 0x0E , -0x21 , -0x1F , -0x12 , -0x0E}; // Mainly using this for checking if king is in check
 
 	public Board() {
 		chessBoard = new IPiece[8][8];
@@ -319,7 +319,6 @@ public class Board implements IBoard {
 
 		}
 
-		//System.out.println(this.toString());
 
 	}
 
@@ -328,8 +327,6 @@ public class Board implements IBoard {
 	 */
 	@Override
 	public ArrayList<IPiece> getPieces() {
-		IPiece king = null; // We need the king separately. If king is in check check, we need to find out
-		// first.
 		ArrayList<IPiece> pieces = new ArrayList<IPiece>(); // The other pieces.
 		ArrayList<IPiece> finalList = new ArrayList<IPiece>(); // All the pieces, king first.
 		IPiece temp;
@@ -340,15 +337,12 @@ public class Board implements IBoard {
 				if (temp == null)
 					continue;
 				if (temp.getColor().equals(this.turn)) {
-					//if (temp.getType() == Type.King) {
-					//	king = temp;
-					//} else {
+					
 						pieces.add(temp);
-					//}
+					
 				}
 			}
 		}
-		//finalList.add(king);
 		finalList.addAll(pieces);
 
 		return finalList;

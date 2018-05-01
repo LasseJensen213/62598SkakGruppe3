@@ -14,17 +14,25 @@ public class Knight extends Piece {
 	public Knight(Color color, Point coordinates) {
 		super(Type.Knight, color, value, coordinates);
 		legalMoves = new ArrayList<>();
-		// TODO Auto-generated constructor stub
+		instantiateMoves();
+
 	}
 
 	public Knight(IPiece iPiece) {
 		super(Type.Knight, iPiece.getColor(), value,
 				new Point((int) iPiece.getCoordinates().getX(), (int) iPiece.getCoordinates().getY()));
 		legalMoves = new ArrayList<>();
+		instantiateMoves();
+
 	}
 
 	@Override
 	public ArrayList<Point> getLegalMoves() {
+				return legalMoves;
+	}
+	
+	
+	public void instantiateMoves() {
 		legalMoves = new ArrayList<>(8);
 		legalMoves.add(new Point(-2, -1));
 		legalMoves.add(new Point(-2, +1));
@@ -34,8 +42,6 @@ public class Knight extends Piece {
 		legalMoves.add(new Point(+2, -1));
 		legalMoves.add(new Point(+1, -2));
 		legalMoves.add(new Point(-1, -2));
-
-		return legalMoves;
 	}
 
 	public String toString() {
